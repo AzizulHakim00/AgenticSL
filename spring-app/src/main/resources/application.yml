@@ -1,0 +1,40 @@
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      timeout: 2h
+      cookie:
+        http-only: true
+        secure: ${COOKIE_SECURE:true}
+        same-site: lax
+  tomcat:
+    threads:
+      max: 30
+      min-spare: 2
+spring:
+  application:
+    name: AgenticSL
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  thymeleaf:
+    cache: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+app:
+  public-url: ${PUBLIC_BASE_URL:http://localhost:8080}
+  admin-id: ${ADMIN_GITHUB_ID:157488702}
+  repository: ${GITHUB_REPOSITORY:AzizulHakim00/AgenticSL}
+  github-client-id: ${GITHUB_CLIENT_ID:}
+  github-client-secret: ${GITHUB_CLIENT_SECRET:}
+  github-token: ${GITHUB_ADMIN_TOKEN:}
+  webhook-secret: ${GITHUB_WEBHOOK_SECRET:}
+  mongodb-uri: ${MONGODB_URI:}
+  mongodb-database: ${MONGODB_DATABASE:agenticsl}

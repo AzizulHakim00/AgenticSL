@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: agenticsl-learning-hub
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: ADMIN_GITHUB_ID
+        value: "157488702"
+      - key: GITHUB_REPOSITORY
+        value: AzizulHakim00/AgenticSL
+      - key: COOKIE_SECURE
+        value: "true"

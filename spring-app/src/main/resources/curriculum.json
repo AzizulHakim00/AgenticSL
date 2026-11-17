@@ -1,0 +1,3926 @@
+{
+  "curriculum": [
+    {
+      "day": 1,
+      "module": 1,
+      "title": "HTTP, REST & JSON",
+      "outcome": "Trace requests from client to server",
+      "minutes": 90,
+      "lesson": "An HTTP request has a method, URL, headers and sometimes a body. GET reads a representation; POST commonly creates a resource. JSON is a data format, not a transport. A useful task API returns 201 with a resource identifier on creation, 200 on retrieval and a clear 400 response for malformed input. Record the request and response together.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: trace requests from client to server.",
+        "Implement the Day 1 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build a small task API with GET and POST; save one successful and one invalid request.",
+      "resources": [
+        {
+          "label": "API Engineering · primary documentation",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d1-q1",
+          "prompt": "Which status best describes a newly created task?",
+          "options": [
+            "404 Not Found",
+            "500 Internal Server Error",
+            "301 Moved Permanently",
+            "201 Created"
+          ],
+          "answer": 3,
+          "explanation": "201 Created."
+        },
+        {
+          "id": "d1-q2",
+          "prompt": "Your POST creates a task. What should the response include?",
+          "options": [
+            "404 because the task did not exist before",
+            "A redirect to an unrelated page",
+            "201 and the new task identifier",
+            "200 with all database credentials"
+          ],
+          "answer": 2,
+          "explanation": "201 and the new task identifier."
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "module": 1,
+      "title": "Authentication & API contracts",
+      "outcome": "Separate authentication from authorization",
+      "minutes": 90,
+      "lesson": "Authentication establishes who is calling; authorization decides what that caller may do. A valid login does not grant access to every record. Validate the request schema and check ownership on the server for every operation. An OpenAPI document describes methods, inputs, outputs and error responses; it does not enforce permissions by itself.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: separate authentication from authorization.",
+        "Implement the Day 2 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Add token authentication, request validation and an OpenAPI contract; show a rejected unauthorized request.",
+      "resources": [
+        {
+          "label": "API Engineering · primary documentation",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d2-q1",
+          "prompt": "What should happen when a valid user requests another user’s private record?",
+          "options": [
+            "The server returns all records",
+            "The API trusts the submitted user ID",
+            "The server rejects it after checking ownership",
+            "The client hides the link only"
+          ],
+          "answer": 2,
+          "explanation": "The server rejects it after checking ownership."
+        },
+        {
+          "id": "d2-q2",
+          "prompt": "A valid token belongs to learner A, who requests learner B’s private submission. What next?",
+          "options": [
+            "Trust an ownerId supplied in the request",
+            "Reject access after an ownership check",
+            "Return it because the token is valid",
+            "Ask the browser to hide it after loading"
+          ],
+          "answer": 1,
+          "explanation": "Reject access after an ownership check."
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "module": 2,
+      "title": "Transformers, tokens & context",
+      "outcome": "Explain context limits and token costs",
+      "minutes": 90,
+      "lesson": "A transformer processes token representations using attention. Tokens are model-specific units rather than words or characters. The context window limits what information a request can use; including a fact in yesterday’s conversation does not mean a new request contains it. Measure tokens with the selected model’s tokenizer and record the model and input alongside the measurement.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: explain context limits and token costs.",
+        "Implement the Day 3 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Compare token counts for three prompts and document what happens when relevant context is removed.",
+      "resources": [
+        {
+          "label": "LLM Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/overview"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d3-q1",
+          "prompt": "What consumes a model’s context budget?",
+          "options": [
+            "Only downloaded documents",
+            "Input and generated output within the model’s limits",
+            "Only characters in the user’s name",
+            "Only the final sentence"
+          ],
+          "answer": 1,
+          "explanation": "Input and generated output within the model’s limits."
+        },
+        {
+          "id": "d3-q2",
+          "prompt": "Two models tokenize the same text differently. How do you compare usage?",
+          "options": [
+            "Record counts with each model’s tokenizer and identifier",
+            "Assume every word equals one token",
+            "Compare file size only",
+            "Use one model’s count for both without qualification"
+          ],
+          "answer": 0,
+          "explanation": "Record counts with each model’s tokenizer and identifier."
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "module": 2,
+      "title": "Prompt design & baselines",
+      "outcome": "Make instructions testable",
+      "minutes": 90,
+      "lesson": "A useful prompt states the task, relevant context, constraints and output contract. Establish a baseline before adding examples or extra instructions. Compare versions on fixed inputs using a predefined criterion. Keep development examples separate from your final evaluation set so you do not mistake tuning to known examples for general improvement.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: make instructions testable.",
+        "Implement the Day 4 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Write a prompt with a clear task, constraints and output format; compare it on five fixed examples.",
+      "resources": [
+        {
+          "label": "LLM Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/overview"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d4-q1",
+          "prompt": "How should two prompt versions be compared?",
+          "options": [
+            "With the same held-out examples and scoring rules",
+            "With one different example each",
+            "By which prompt is longer",
+            "Only by the author’s preference"
+          ],
+          "answer": 0,
+          "explanation": "With the same held-out examples and scoring rules."
+        },
+        {
+          "id": "d4-q2",
+          "prompt": "Prompt B looks better on one hand-picked example. What can you conclude?",
+          "options": [
+            "B is universally more accurate",
+            "B eliminates the need for validation",
+            "Only B’s longer output proves improvement",
+            "More fixed evaluation cases are needed"
+          ],
+          "answer": 3,
+          "explanation": "More fixed evaluation cases are needed."
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "module": 2,
+      "title": "LLM API & structured outputs",
+      "outcome": "Validate model responses before use",
+      "minutes": 90,
+      "lesson": "Put model requests behind a small adapter so application logic can be tested without a live paid model. Structured output is still untrusted input: validate types, required fields, ranges and business rules. A response that parses as JSON may still be invalid for your application. Define a controlled error for malformed or incomplete results.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: validate model responses before use.",
+        "Implement the Day 5 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build a model adapter and validate a structured response; include a mocked malformed response test.",
+      "resources": [
+        {
+          "label": "LLM Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/overview"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d5-q1",
+          "prompt": "What protects downstream code from malformed model data?",
+          "options": [
+            "Assuming the prompt always works",
+            "Removing all error handling",
+            "Parsing text by its font size",
+            "Schema validation plus explicit failure handling"
+          ],
+          "answer": 3,
+          "explanation": "Schema validation plus explicit failure handling."
+        },
+        {
+          "id": "d5-q2",
+          "prompt": "A response is valid JSON but its score is outside the permitted range. What next?",
+          "options": [
+            "Silently remove every validation rule",
+            "Store it before checking anything",
+            "Reject it using business-rule validation",
+            "Accept it because JSON parsing succeeded"
+          ],
+          "answer": 2,
+          "explanation": "Reject it using business-rule validation."
+        }
+      ]
+    },
+    {
+      "day": 6,
+      "module": 2,
+      "title": "Retries, latency & budget",
+      "outcome": "Bound failure recovery and spending",
+      "minutes": 90,
+      "lesson": "Transient failures need bounded recovery. Use a timeout, a limited retry count and backoff for retryable errors. Track total elapsed time as well as individual attempts. Retrying a write can duplicate side effects, so combine retries with idempotency where appropriate. Record usage and pricing assumptions instead of treating an estimated cost as a billed amount.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: bound failure recovery and spending.",
+        "Implement the Day 6 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Add timeout, capped retries and request cost logging; test a rate-limit response using a mock.",
+      "resources": [
+        {
+          "label": "LLM Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/overview"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d6-q1",
+          "prompt": "Which retry strategy is safest?",
+          "options": [
+            "Retry all errors without limits",
+            "Disable the timeout",
+            "Bounded retries with backoff and a total timeout",
+            "Retry forever immediately"
+          ],
+          "answer": 2,
+          "explanation": "Bounded retries with backoff and a total timeout."
+        },
+        {
+          "id": "d6-q2",
+          "prompt": "A request keeps receiving rate limits. Which behavior is appropriate?",
+          "options": [
+            "Hide the failures and report success",
+            "Back off and stop at the retry or time budget",
+            "Retry immediately forever",
+            "Retry with every available credential"
+          ],
+          "answer": 1,
+          "explanation": "Back off and stop at the retry or time budget."
+        }
+      ]
+    },
+    {
+      "day": 7,
+      "module": 3,
+      "title": "What makes an agent?",
+      "outcome": "Distinguish a fixed workflow from a decision loop",
+      "minutes": 90,
+      "lesson": "A fixed workflow follows branches chosen by application code. An agent loop allows a model to select a next action from an allowed set. Use an agent when that flexibility serves the task; deterministic code is often easier to test for a fixed procedure. Both approaches need explicit inputs, outputs, permissions and stopping conditions.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: distinguish a fixed workflow from a decision loop.",
+        "Implement the Day 7 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Compare a scripted workflow and an agent loop on the same task; explain when each is appropriate.",
+      "resources": [
+        {
+          "label": "Agent Fundamentals · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d7-q1",
+          "prompt": "What distinguishes an agent loop?",
+          "options": [
+            "It cannot use deterministic code",
+            "Model decisions can select the next allowed action",
+            "It must contain many agents",
+            "It must run without limits"
+          ],
+          "answer": 1,
+          "explanation": "Model decisions can select the next allowed action."
+        },
+        {
+          "id": "d7-q2",
+          "prompt": "A task always follows the same three known steps. What is a useful baseline?",
+          "options": [
+            "A deterministic workflow implementing those steps",
+            "An unlimited delegation tree",
+            "A model with unrestricted filesystem access",
+            "A system with no acceptance criteria"
+          ],
+          "answer": 0,
+          "explanation": "A deterministic workflow implementing those steps."
+        }
+      ]
+    },
+    {
+      "day": 8,
+      "module": 3,
+      "title": "Tool schemas & validation",
+      "outcome": "Define narrow tool contracts",
+      "minutes": 90,
+      "lesson": "A tool is a capability with a contract. Narrow tools such as get_task(id) are easier to validate than arbitrary commands. Define required properties, types, bounds and whether extra arguments are rejected. Validation belongs at the execution boundary even when the model was given a schema. Return actionable errors without exposing credentials.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: define narrow tool contracts.",
+        "Implement the Day 8 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Implement two tools with typed inputs; test invalid and unexpected arguments.",
+      "resources": [
+        {
+          "label": "Agent Fundamentals · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d8-q1",
+          "prompt": "Where should tool arguments be validated?",
+          "options": [
+            "At the server-side tool boundary",
+            "Only in the model prompt",
+            "Only after a database write",
+            "Never if the model is capable"
+          ],
+          "answer": 0,
+          "explanation": "At the server-side tool boundary."
+        },
+        {
+          "id": "d8-q2",
+          "prompt": "A tool expects an integer ID but receives a shell command string. What next?",
+          "options": [
+            "Execute it to infer the intended ID",
+            "Pass it through because the schema was in the prompt",
+            "Remove the type constraint",
+            "Reject it before tool execution"
+          ],
+          "answer": 3,
+          "explanation": "Reject it before tool execution."
+        }
+      ]
+    },
+    {
+      "day": 9,
+      "module": 3,
+      "title": "Function calling",
+      "outcome": "Dispatch only allowed tools",
+      "minutes": 90,
+      "lesson": "Function calling asks the model for a tool name and arguments; your application decides whether to execute them. Dispatch through an explicit allowlist, validate arguments and preserve call identifiers when returning results. A model-generated name is not permission to run shell code. Test both an unknown name and invalid arguments.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: dispatch only allowed tools.",
+        "Implement the Day 9 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build a tool dispatcher with an allowlist and a structured error for unknown tools.",
+      "resources": [
+        {
+          "label": "Agent Fundamentals · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d9-q1",
+          "prompt": "How should an unknown tool call be handled?",
+          "options": [
+            "Execute it as shell code",
+            "Guess a similar privileged operation",
+            "Silently report success",
+            "Reject it with a controlled error"
+          ],
+          "answer": 3,
+          "explanation": "Reject it with a controlled error."
+        },
+        {
+          "id": "d9-q2",
+          "prompt": "The model requests delete_everything, which is absent from your tool registry. What next?",
+          "options": [
+            "Run the name as a command",
+            "Pretend the tool completed",
+            "Return an unknown-tool error",
+            "Construct that function dynamically"
+          ],
+          "answer": 2,
+          "explanation": "Return an unknown-tool error."
+        }
+      ]
+    },
+    {
+      "day": 10,
+      "module": 3,
+      "title": "ReAct & observable steps",
+      "outcome": "Inspect actions without requiring hidden reasoning",
+      "minutes": 90,
+      "lesson": "ReAct connects observations and actions in a repeated task process. For debugging, log observable tool names, validated arguments, durations, results and concise decision summaries. Hidden chain of thought is unnecessary. A trace should let you locate the failed boundary and reproduce the problem while redacting secrets and sensitive payloads.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: inspect actions without requiring hidden reasoning.",
+        "Implement the Day 10 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Log tool names, arguments, results and concise decision summaries for an agent task.",
+      "resources": [
+        {
+          "label": "Agent Fundamentals · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d10-q1",
+          "prompt": "Which log is useful for debugging an agent?",
+          "options": [
+            "A demand for hidden chain of thought",
+            "Unredacted credentials",
+            "Observable tool calls, results and errors",
+            "Only a success emoji"
+          ],
+          "answer": 2,
+          "explanation": "Observable tool calls, results and errors."
+        },
+        {
+          "id": "d10-q2",
+          "prompt": "Which trace helps reproduce a failed lookup?",
+          "options": [
+            "A screenshot of a success icon",
+            "Call ID, validated input, status, duration and redacted error",
+            "Only the final assistant sentence",
+            "Every secret in the environment"
+          ],
+          "answer": 1,
+          "explanation": "Call ID, validated input, status, duration and redacted error."
+        }
+      ]
+    },
+    {
+      "day": 11,
+      "module": 3,
+      "title": "Agent loop & stop conditions",
+      "outcome": "Keep execution bounded",
+      "minutes": 90,
+      "lesson": "Every loop needs code-enforced limits: maximum steps, wall-clock deadline and an explicit final-result contract. Stop when the goal is achieved, the budget is exhausted or a required capability is unavailable. A prompt saying do not loop forever is not a runtime guard. Test a mock that repeatedly requests the same tool.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: keep execution bounded.",
+        "Implement the Day 11 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build a loop with maximum steps, a deadline and a final-result schema; test a looping mock model.",
+      "resources": [
+        {
+          "label": "Agent Fundamentals · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d11-q1",
+          "prompt": "What prevents an endless tool loop?",
+          "options": [
+            "An unlimited context window",
+            "A step cap and deadline enforced by code",
+            "A polite instruction alone",
+            "More tools"
+          ],
+          "answer": 1,
+          "explanation": "A step cap and deadline enforced by code."
+        },
+        {
+          "id": "d11-q2",
+          "prompt": "The model has used every allowed step without a final answer. What next?",
+          "options": [
+            "Stop with a budget-exhausted result",
+            "Reset the counter silently",
+            "Ignore the deadline",
+            "Claim the task completed"
+          ],
+          "answer": 0,
+          "explanation": "Stop with a budget-exhausted result."
+        }
+      ]
+    },
+    {
+      "day": 12,
+      "module": 3,
+      "title": "Failures & recovery",
+      "outcome": "Make tool errors actionable",
+      "minutes": 90,
+      "lesson": "Classify failures before recovering. Invalid input usually needs correction; a temporary network error may justify a bounded retry; missing permission requires rejection or user action. Preserve the failed operation and its error in the trace. Verify whether a write already happened before repeating it. A partial result should identify what remains incomplete.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: make tool errors actionable.",
+        "Implement the Day 12 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Simulate three tool failures and show whether the agent retries, requests input or stops.",
+      "resources": [
+        {
+          "label": "Agent Fundamentals · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d12-q1",
+          "prompt": "When is retrying a failed write especially risky?",
+          "options": [
+            "When it can repeat a side effect without idempotency",
+            "When the error message is short",
+            "When the tool has a name",
+            "When the input is JSON"
+          ],
+          "answer": 0,
+          "explanation": "When it can repeat a side effect without idempotency."
+        },
+        {
+          "id": "d12-q2",
+          "prompt": "A timed-out write might already have succeeded. What must recovery consider?",
+          "options": [
+            "Only whether the error message is short",
+            "Retrying with a new identifier each time",
+            "Deleting all previous records",
+            "Operation status and an idempotency key"
+          ],
+          "answer": 3,
+          "explanation": "Operation status and an idempotency key."
+        }
+      ]
+    },
+    {
+      "day": 13,
+      "module": 3,
+      "title": "Single-agent checkpoint",
+      "outcome": "Demonstrate a reliable small agent",
+      "minutes": 90,
+      "lesson": "A checkpoint is evidence that a bounded system meets stated criteria. For your research helper, define five cases with expected behavior, including unavailable tools or unsupported claims. Use mock responses to make tests repeatable, then label any optional live-model runs separately. Record failures as well as successes in the demonstration.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: demonstrate a reliable small agent.",
+        "Implement the Day 13 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Ship a single-agent research helper with mocks, tests and five documented example runs.",
+      "resources": [
+        {
+          "label": "Agent Fundamentals · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d13-q1",
+          "prompt": "What best supports a claim of reliability?",
+          "options": [
+            "One impressive screenshot",
+            "Only a list of dependencies",
+            "Only the number of prompts",
+            "Repeatable cases with stated success criteria and failures"
+          ],
+          "answer": 3,
+          "explanation": "Repeatable cases with stated success criteria and failures."
+        },
+        {
+          "id": "d13-q2",
+          "prompt": "One of five fixed research-helper cases fails. How should it be reported?",
+          "options": [
+            "Remove the failed case without explaining why",
+            "Replace the result with a hypothetical answer",
+            "Four successes and the observed failure with its cause",
+            "100% success because most cases passed"
+          ],
+          "answer": 2,
+          "explanation": "Four successes and the observed failure with its cause."
+        }
+      ]
+    },
+    {
+      "day": 14,
+      "module": 4,
+      "title": "Embeddings & similarity",
+      "outcome": "Explain what semantic distance represents",
+      "minutes": 90,
+      "lesson": "Embeddings map inputs into vectors whose distances can approximate semantic relatedness. Similarity depends on the embedding model and does not prove truth, recency or access permission. Compare relevant and irrelevant queries against known documents. Record the model, similarity measure and retrieved identifiers so the experiment can be reproduced.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: explain what semantic distance represents.",
+        "Implement the Day 14 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Embed a small document set or use a local alternative; compare five relevant and irrelevant queries.",
+      "resources": [
+        {
+          "label": "Memory & RAG · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/retrieval"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d14-q1",
+          "prompt": "What does embedding similarity indicate?",
+          "options": [
+            "Permission to access a document",
+            "Proof that a claim is current",
+            "Approximate semantic relatedness under the chosen model",
+            "Guaranteed factual truth"
+          ],
+          "answer": 2,
+          "explanation": "Approximate semantic relatedness under the chosen model."
+        },
+        {
+          "id": "d14-q2",
+          "prompt": "A retrieved document has high embedding similarity. What remains unproven?",
+          "options": [
+            "That a similarity score was computed",
+            "Its factual correctness and access authorization",
+            "That vector comparison was attempted",
+            "That the query has text"
+          ],
+          "answer": 1,
+          "explanation": "Its factual correctness and access authorization."
+        }
+      ]
+    },
+    {
+      "day": 15,
+      "module": 4,
+      "title": "Chunking & retrieval",
+      "outcome": "Measure retrieval before generation",
+      "minutes": 90,
+      "lesson": "Chunking determines what units retrieval can return. Small chunks may lose context; large chunks may mix relevant and irrelevant passages. Hold queries and the embedding model fixed while changing chunk size. For a small labelled set, measure whether the known relevant passage appears among the top k results before adding a generator.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: measure retrieval before generation.",
+        "Implement the Day 15 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Compare two chunk sizes using the same queries and record recall of known relevant passages.",
+      "resources": [
+        {
+          "label": "Memory & RAG · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/retrieval"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d15-q1",
+          "prompt": "How can retrieval quality be assessed?",
+          "options": [
+            "Measure the screen width",
+            "Check whether known relevant passages are retrieved",
+            "Only count generated tokens",
+            "Only change the model temperature"
+          ],
+          "answer": 1,
+          "explanation": "Check whether known relevant passages are retrieved."
+        },
+        {
+          "id": "d15-q2",
+          "prompt": "You change chunk size and model simultaneously. What is the comparison problem?",
+          "options": [
+            "The effect of chunk size is confounded by model changes",
+            "The experiment automatically becomes more accurate",
+            "Recall no longer needs relevant labels",
+            "The larger chunk must be better"
+          ],
+          "answer": 0,
+          "explanation": "The effect of chunk size is confounded by model changes."
+        }
+      ]
+    },
+    {
+      "day": 16,
+      "module": 4,
+      "title": "Grounded answers & citations",
+      "outcome": "Keep answers tied to retrieved evidence",
+      "minutes": 90,
+      "lesson": "Retrieval augmented generation supplies retrieved evidence to a model. Keep the document identifier, excerpt and any useful timestamp with each passage. Ask for claims supported by that evidence and verify citations against the actual text. If retrieval misses the answer, generating a confident sentence does not repair the evidence gap.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: keep answers tied to retrieved evidence.",
+        "Implement the Day 16 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build a RAG answerer that cites retrieved passages and abstains when evidence is missing.",
+      "resources": [
+        {
+          "label": "Memory & RAG · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/retrieval"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d16-q1",
+          "prompt": "What should a grounded system do without supporting evidence?",
+          "options": [
+            "Say the evidence is insufficient",
+            "Invent a plausible citation",
+            "Use a random document",
+            "Always answer confidently"
+          ],
+          "answer": 0,
+          "explanation": "Say the evidence is insufficient."
+        },
+        {
+          "id": "d16-q2",
+          "prompt": "The answer cites a retrieved passage that does not support its claim. What next?",
+          "options": [
+            "Trust the citation format alone",
+            "Increase output length",
+            "Remove passage identifiers",
+            "Flag the unsupported claim and revise or qualify it"
+          ],
+          "answer": 3,
+          "explanation": "Flag the unsupported claim and revise or qualify it."
+        }
+      ]
+    },
+    {
+      "day": 17,
+      "module": 4,
+      "title": "Memory lifecycle & RAG review",
+      "outcome": "Distinguish durable memory from retrieval",
+      "minutes": 90,
+      "lesson": "Memory has scope and a lifetime. Session context, durable preferences and retrieved documents serve different purposes. Store only what is useful, preserve its origin and permit correction or removal. A timestamp helps identify stale evidence. Never retrieve another person’s private memory merely because it is semantically similar to the current query.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: distinguish durable memory from retrieval.",
+        "Implement the Day 17 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Add source metadata, deletion and stale-document handling; write a small retrieval evaluation report.",
+      "resources": [
+        {
+          "label": "Memory & RAG · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/retrieval"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d17-q1",
+          "prompt": "Why store source timestamps with retrieved content?",
+          "options": [
+            "To guarantee correctness forever",
+            "To bypass authorization",
+            "To avoid evaluating retrieval",
+            "To identify potentially stale evidence"
+          ],
+          "answer": 3,
+          "explanation": "To identify potentially stale evidence."
+        },
+        {
+          "id": "d17-q2",
+          "prompt": "An old stored preference conflicts with the learner’s new instruction. What next?",
+          "options": [
+            "Merge unrelated users’ preferences",
+            "Silently keep contradictory values forever",
+            "Use the new instruction and correct the stored preference",
+            "Always treat old memory as higher priority"
+          ],
+          "answer": 2,
+          "explanation": "Use the new instruction and correct the stored preference."
+        }
+      ]
+    },
+    {
+      "day": 18,
+      "module": 5,
+      "title": "Agents SDK setup",
+      "outcome": "Understand an SDK-managed agent run",
+      "minutes": 90,
+      "lesson": "An SDK packages model calls, tool dispatch and run state, but the application still owns its business rules. Start with one minimal agent and capture its final result. Keep tools and validation testable independently of a model provider. Pin and document the SDK version before following examples because interfaces can change.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: understand an sdk-managed agent run.",
+        "Implement the Day 18 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Implement a minimal agent with a mockable model boundary and capture its result.",
+      "resources": [
+        {
+          "label": "Agent Frameworks · primary documentation",
+          "url": "https://openai.github.io/openai-agents-python/"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d18-q1",
+          "prompt": "What should remain independently testable when adopting an SDK?",
+          "options": [
+            "Only a screenshot",
+            "Nothing outside the SDK",
+            "Application behavior and tool contracts",
+            "Only the package installation"
+          ],
+          "answer": 2,
+          "explanation": "Application behavior and tool contracts."
+        },
+        {
+          "id": "d18-q2",
+          "prompt": "You want repeatable SDK-agent tests without paid calls. What helps?",
+          "options": [
+            "Removing all assertions",
+            "A mockable model adapter and deterministic tool tests",
+            "Running live requests until they pass",
+            "Testing package installation only"
+          ],
+          "answer": 1,
+          "explanation": "A mockable model adapter and deterministic tool tests."
+        }
+      ]
+    },
+    {
+      "day": 19,
+      "module": 5,
+      "title": "SDK tools & validation",
+      "outcome": "Connect tools with explicit contracts",
+      "minutes": 90,
+      "lesson": "SDK tools should expose the same clear contracts as standalone functions. Use descriptive names, typed inputs and structured failures. Test the underlying function directly, then test registration and dispatch separately. A tool description helps selection; it does not replace validation or authorization. Keep side effects explicit in both documentation and tests.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: connect tools with explicit contracts.",
+        "Implement the Day 19 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Register two tools, validate their inputs and demonstrate a structured failure.",
+      "resources": [
+        {
+          "label": "Agent Frameworks · primary documentation",
+          "url": "https://openai.github.io/openai-agents-python/"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d19-q1",
+          "prompt": "What is a good tool description?",
+          "options": [
+            "Only a marketing slogan",
+            "A clear purpose, expected inputs and side effects",
+            "A vague instruction to do anything",
+            "A pasted secret"
+          ],
+          "answer": 1,
+          "explanation": "A clear purpose, expected inputs and side effects."
+        },
+        {
+          "id": "d19-q2",
+          "prompt": "A registered SDK tool fails input validation. What should the caller receive?",
+          "options": [
+            "A structured validation error without executing the action",
+            "A fabricated successful result",
+            "An administrative override",
+            "A request to expose the API key"
+          ],
+          "answer": 0,
+          "explanation": "A structured validation error without executing the action."
+        }
+      ]
+    },
+    {
+      "day": 20,
+      "module": 5,
+      "title": "SDK handoffs & boundaries",
+      "outcome": "Limit specialist responsibilities",
+      "minutes": 90,
+      "lesson": "A handoff transfers responsibility to a specialist with a narrower purpose. Define the trigger, the input summary and the tools the specialist may use. A vague handoff can lose constraints or expand permissions accidentally. Include a test where the coordinator should keep the task instead of transferring every request.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: limit specialist responsibilities.",
+        "Implement the Day 20 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Create two specialists and a handoff rule; test a request that should remain with the first agent.",
+      "resources": [
+        {
+          "label": "Agent Frameworks · primary documentation",
+          "url": "https://openai.github.io/openai-agents-python/"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d20-q1",
+          "prompt": "What is a useful handoff boundary?",
+          "options": [
+            "A specific responsibility with limited tools",
+            "Every agent can edit every resource",
+            "Handoffs replace authorization",
+            "The longest prompt gets control"
+          ],
+          "answer": 0,
+          "explanation": "A specific responsibility with limited tools."
+        },
+        {
+          "id": "d20-q2",
+          "prompt": "A general question does not match the specialist’s remit. What next?",
+          "options": [
+            "Always hand off regardless of scope",
+            "Grant every specialist all permissions",
+            "Drop the original constraints",
+            "Keep it with the appropriate agent or ask for clarification"
+          ],
+          "answer": 3,
+          "explanation": "Keep it with the appropriate agent or ask for clarification."
+        }
+      ]
+    },
+    {
+      "day": 21,
+      "module": 5,
+      "title": "Traces & observability",
+      "outcome": "Trace behavior without exposing secrets",
+      "minutes": 90,
+      "lesson": "Observability connects events across a run using stable identifiers. Capture status, tool latency, failures and selected non-sensitive metadata. Logging everything can expose private inputs or keys. Seed a fake secret in a test and verify redaction. Distinguish a trace of what happened from a claim that the result was correct.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: trace behavior without exposing secrets.",
+        "Implement the Day 21 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Capture run IDs, tool duration and errors; redact a seeded fake secret in a log test.",
+      "resources": [
+        {
+          "label": "Agent Frameworks · primary documentation",
+          "url": "https://openai.github.io/openai-agents-python/"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d21-q1",
+          "prompt": "Which trace field should be redacted?",
+          "options": [
+            "A public tool name",
+            "A duration in milliseconds",
+            "A non-sensitive status code",
+            "Credentials and sensitive payloads"
+          ],
+          "answer": 3,
+          "explanation": "Credentials and sensitive payloads."
+        },
+        {
+          "id": "d21-q2",
+          "prompt": "A seeded fake key appears in a captured log. What does the redaction test show?",
+          "options": [
+            "It is safe because the key is fake in this test",
+            "The trace proves task correctness",
+            "The redaction control failed",
+            "Observability is complete"
+          ],
+          "answer": 2,
+          "explanation": "The redaction control failed."
+        }
+      ]
+    },
+    {
+      "day": 22,
+      "module": 5,
+      "title": "LangGraph state & nodes",
+      "outcome": "Model a workflow as typed state",
+      "minutes": 90,
+      "lesson": "A state graph models nodes as operations over explicit shared state. Document which fields each node consumes and produces. Treat a state transition as a contract that can be tested with a fixed input. Avoid hidden globals that disappear on restart or cause one run to affect another.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: model a workflow as typed state.",
+        "Implement the Day 22 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build a three-node state graph and document which fields each node reads and writes.",
+      "resources": [
+        {
+          "label": "Agent Frameworks · primary documentation",
+          "url": "https://openai.github.io/openai-agents-python/"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d22-q1",
+          "prompt": "What belongs in a graph state contract?",
+          "options": [
+            "A database password",
+            "Unbounded hidden global variables",
+            "Explicit fields and valid state transitions",
+            "Only the UI color"
+          ],
+          "answer": 2,
+          "explanation": "Explicit fields and valid state transitions."
+        },
+        {
+          "id": "d22-q2",
+          "prompt": "A node reads a field never defined in graph state. What should be fixed?",
+          "options": [
+            "The evaluation results",
+            "The state contract and its validation",
+            "Only the node’s display color",
+            "The chart title"
+          ],
+          "answer": 1,
+          "explanation": "The state contract and its validation."
+        }
+      ]
+    },
+    {
+      "day": 23,
+      "module": 5,
+      "title": "Conditional routing",
+      "outcome": "Make branching behavior predictable",
+      "minutes": 90,
+      "lesson": "Conditional routing chooses an edge from the current state. Give each branch a clear predicate and define a fallback for uncertain or invalid cases. Test retrieval, tool and clarification paths independently. When a model proposes the route, validate its output against allowed labels before following an edge.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: make branching behavior predictable.",
+        "Implement the Day 23 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Route a task to retrieval, a tool or clarification; test all three paths.",
+      "resources": [
+        {
+          "label": "Agent Frameworks · primary documentation",
+          "url": "https://openai.github.io/openai-agents-python/"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d23-q1",
+          "prompt": "How should routing logic be verified?",
+          "options": [
+            "By disabling assertions",
+            "With examples covering each branch and its fallback",
+            "Only the happy path",
+            "By counting graph nodes"
+          ],
+          "answer": 1,
+          "explanation": "With examples covering each branch and its fallback."
+        },
+        {
+          "id": "d23-q2",
+          "prompt": "The router emits an unknown label. What is a controlled outcome?",
+          "options": [
+            "Reject or use an explicit fallback branch",
+            "Call any similarly named operation",
+            "Treat it as administrator permission",
+            "Write the label directly into SQL"
+          ],
+          "answer": 0,
+          "explanation": "Reject or use an explicit fallback branch."
+        }
+      ]
+    },
+    {
+      "day": 24,
+      "module": 5,
+      "title": "Checkpoints & human review",
+      "outcome": "Resume work safely",
+      "minutes": 90,
+      "lesson": "A checkpoint stores enough workflow state to resume from a known point. Place a human review boundary before a consequential write. On resumption, check that the reviewed inputs have not changed and that repeating the operation will not duplicate it. Process memory alone is not a durable checkpoint.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: resume work safely.",
+        "Implement the Day 24 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Persist a graph checkpoint before a write and require a review step before resuming.",
+      "resources": [
+        {
+          "label": "Agent Frameworks · primary documentation",
+          "url": "https://openai.github.io/openai-agents-python/"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d24-q1",
+          "prompt": "What is the purpose of a checkpoint?",
+          "options": [
+            "Resume from a known persisted state",
+            "Guarantee the answer is true",
+            "Eliminate all authorization",
+            "Increase temperature"
+          ],
+          "answer": 0,
+          "explanation": "Resume from a known persisted state."
+        },
+        {
+          "id": "d24-q2",
+          "prompt": "Inputs changed after a human approved a checkpoint. What next?",
+          "options": [
+            "Reuse approval for any future inputs",
+            "Remove all checkpoint metadata",
+            "Execute twice for certainty",
+            "Require review of the changed operation before execution"
+          ],
+          "answer": 3,
+          "explanation": "Require review of the changed operation before execution."
+        }
+      ]
+    },
+    {
+      "day": 25,
+      "module": 5,
+      "title": "Framework comparison",
+      "outcome": "Choose a framework from evidence",
+      "minutes": 90,
+      "lesson": "Compare frameworks using the same task and acceptance criteria. Examine how each handles state, tool failures, tests, resumption and deployment. Count code and setup effort only as secondary signals. The useful conclusion explains which tradeoffs fit this task; it should not claim one framework is universally best.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: choose a framework from evidence.",
+        "Implement the Day 25 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Implement the same small workflow with two approaches and compare control, testing and complexity.",
+      "resources": [
+        {
+          "label": "Agent Frameworks · primary documentation",
+          "url": "https://openai.github.io/openai-agents-python/"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d25-q1",
+          "prompt": "What should guide framework choice?",
+          "options": [
+            "Only social media popularity",
+            "Only the package name",
+            "Always choosing the newest release",
+            "Task needs, failure modes and maintainability"
+          ],
+          "answer": 3,
+          "explanation": "Task needs, failure modes and maintainability."
+        },
+        {
+          "id": "d25-q2",
+          "prompt": "Two frameworks solve the same task. Which comparison is useful?",
+          "options": [
+            "Only the number of stars",
+            "Which demo uses more agents",
+            "Control, failure handling, tests and maintenance on shared criteria",
+            "Only social-media mentions"
+          ],
+          "answer": 2,
+          "explanation": "Control, failure handling, tests and maintenance on shared criteria."
+        }
+      ]
+    },
+    {
+      "day": 26,
+      "module": 6,
+      "title": "Multi-agent task decomposition",
+      "outcome": "Split work by independent responsibilities",
+      "minutes": 90,
+      "lesson": "Decomposition helps when specialists have independent responsibilities and explicit outputs. Split a research task into evidence retrieval, claim checking and synthesis only if the boundaries reduce complexity. Specify a shared result schema and a budget. A specialist dependent on another result cannot safely start with an invented input.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: split work by independent responsibilities.",
+        "Implement the Day 26 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Break a research task into specialist roles and define inputs and outputs for each role.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d26-q1",
+          "prompt": "When is parallel specialist work useful?",
+          "options": [
+            "When there is no output contract",
+            "Whenever more tokens can be spent",
+            "When subtasks are independent and results can be combined",
+            "When every task needs the previous result"
+          ],
+          "answer": 2,
+          "explanation": "When subtasks are independent and results can be combined."
+        },
+        {
+          "id": "d26-q2",
+          "prompt": "Task B requires Task A’s output. Can both run independently?",
+          "options": [
+            "Only if permissions are removed",
+            "No; model and enforce the dependency",
+            "Yes, by inventing A’s result for B",
+            "Yes, if each uses a longer prompt"
+          ],
+          "answer": 1,
+          "explanation": "No; model and enforce the dependency."
+        }
+      ]
+    },
+    {
+      "day": 27,
+      "module": 6,
+      "title": "Coordinator & specialists",
+      "outcome": "Coordinate bounded specialist work",
+      "minutes": 90,
+      "lesson": "A coordinator assigns bounded work, checks output contracts and decides when the task is done. Specialists should have only the capabilities needed for their roles. Enforce maximum delegation depth, task count and time budget in code. Test a specialist failure so the coordinator can return an honest partial result.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: coordinate bounded specialist work.",
+        "Implement the Day 27 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build a coordinator with a fixed task budget and two narrow specialists.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d27-q1",
+          "prompt": "What should a coordinator enforce?",
+          "options": [
+            "Success regardless of results",
+            "Task contracts, budgets and stop conditions",
+            "Unlimited recursive delegation",
+            "Shared administrative access for everyone"
+          ],
+          "answer": 1,
+          "explanation": "Task contracts, budgets and stop conditions."
+        },
+        {
+          "id": "d27-q2",
+          "prompt": "A specialist keeps delegating back to its coordinator. What limits the cycle?",
+          "options": [
+            "Enforced delegation depth and task budget",
+            "A larger context window alone",
+            "A new agent name each time",
+            "Unlimited recursion"
+          ],
+          "answer": 0,
+          "explanation": "Enforced delegation depth and task budget."
+        }
+      ]
+    },
+    {
+      "day": 28,
+      "module": 6,
+      "title": "Shared state & messages",
+      "outcome": "Avoid conflicting shared updates",
+      "minutes": 90,
+      "lesson": "Concurrent agents can overwrite the same record. Use stable identifiers and a version or transaction check to detect conflicts. Define a typed message containing sender, task, status and result. When two updates conflict, preserve the conflict and reconcile it explicitly instead of silently treating the last message as correct.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: avoid conflicting shared updates.",
+        "Implement the Day 28 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Define a message schema and resolve two simulated updates to the same record.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d28-q1",
+          "prompt": "What helps prevent lost updates?",
+          "options": [
+            "Version checks or transactional conflict handling",
+            "Last writer always wins without recording it",
+            "Storing everything only in a prompt",
+            "Removing record IDs"
+          ],
+          "answer": 0,
+          "explanation": "Version checks or transactional conflict handling."
+        },
+        {
+          "id": "d28-q2",
+          "prompt": "Two writers update version 4 of the same record. What can detect a lost update?",
+          "options": [
+            "A UI-only warning",
+            "A longer record title",
+            "Discarding timestamps and IDs",
+            "A conditional write requiring the expected version"
+          ],
+          "answer": 3,
+          "explanation": "A conditional write requiring the expected version."
+        }
+      ]
+    },
+    {
+      "day": 29,
+      "module": 6,
+      "title": "Parallel work & aggregation",
+      "outcome": "Preserve failures in combined results",
+      "minutes": 90,
+      "lesson": "Parallel execution reduces waiting only when tasks are independent. Aggregate successes and failures in a structured result, preserving which specialist produced each part. A failed task should remain visible. Compare latency and output quality with a sequential baseline; adding more agents can increase cost without improving the answer.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: preserve failures in combined results.",
+        "Implement the Day 29 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Run independent mock specialists concurrently and report partial failures honestly.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d29-q1",
+          "prompt": "How should an aggregator handle one failed specialist?",
+          "options": [
+            "Fabricate the missing result",
+            "Report every task successful",
+            "Discard all evidence silently",
+            "Expose the failure and qualify the combined answer"
+          ],
+          "answer": 3,
+          "explanation": "Expose the failure and qualify the combined answer."
+        },
+        {
+          "id": "d29-q2",
+          "prompt": "One of three parallel specialists fails. What should aggregation preserve?",
+          "options": [
+            "A success status for all three",
+            "Only the longest successful output",
+            "Two outputs and an explicit failed-task result",
+            "A fabricated third output"
+          ],
+          "answer": 2,
+          "explanation": "Two outputs and an explicit failed-task result."
+        }
+      ]
+    },
+    {
+      "day": 30,
+      "module": 6,
+      "title": "Disagreement & verification",
+      "outcome": "Resolve conflicting claims with evidence",
+      "minutes": 90,
+      "lesson": "Specialists can disagree because they used different evidence, definitions or assumptions. Resolve factual claims by checking original sources and the scope of each claim. Majority voting is not verification. Preserve uncertainty when the sources do not resolve it and cite the evidence used in the final response.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: resolve conflicting claims with evidence.",
+        "Implement the Day 30 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Create conflicting specialist outputs and require the final answer to cite supporting evidence.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d30-q1",
+          "prompt": "What resolves factual disagreement most usefully?",
+          "options": [
+            "The longest answer",
+            "The highest temperature",
+            "Checking source evidence against the claim",
+            "A majority vote alone"
+          ],
+          "answer": 2,
+          "explanation": "Checking source evidence against the claim."
+        },
+        {
+          "id": "d30-q2",
+          "prompt": "Three agents repeat one unsupported claim. Does that verify it?",
+          "options": [
+            "Only if every agent uses the same model",
+            "No; inspect original evidence for the claim",
+            "Yes, a majority is always factual",
+            "Yes, repeated text becomes a source"
+          ],
+          "answer": 1,
+          "explanation": "No; inspect original evidence for the claim."
+        }
+      ]
+    },
+    {
+      "day": 31,
+      "module": 6,
+      "title": "MCP concepts",
+      "outcome": "Separate host, client and server roles",
+      "minutes": 90,
+      "lesson": "MCP separates a host application, a client connection and a server exposing capabilities. Tools perform operations; resources expose contextual content; prompts provide reusable interaction templates. An MCP connection does not automatically reveal all chat history. Keep your progress service independent of transport so its rules remain directly testable.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: separate host, client and server roles.",
+        "Implement the Day 31 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Draw the host/client/server boundary and implement a small protocol-independent tool service.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d31-q1",
+          "prompt": "What does an MCP server expose?",
+          "options": [
+            "A guaranteed correct model",
+            "Tools, resources or prompts through a defined protocol",
+            "The user’s entire chat history automatically",
+            "An unrestricted operating system"
+          ],
+          "answer": 1,
+          "explanation": "Tools, resources or prompts through a defined protocol."
+        },
+        {
+          "id": "d31-q2",
+          "prompt": "Who exposes callable tool definitions in MCP?",
+          "options": [
+            "The server, through a client connection used by the host",
+            "Every document retrieved by the model",
+            "The user’s entire private chat history",
+            "A database table without a service"
+          ],
+          "answer": 0,
+          "explanation": "The server, through a client connection used by the host."
+        }
+      ]
+    },
+    {
+      "day": 32,
+      "module": 6,
+      "title": "MCP tools & resources",
+      "outcome": "Design reusable integration contracts",
+      "minutes": 90,
+      "lesson": "A tool schema describes accepted arguments and helps a client present the operation. Pair it with server-side validation and an explicit result shape. For get_learning_progress, return measured records and empty states honestly. Do not put secret tokens in schema defaults, descriptions or example outputs.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: design reusable integration contracts.",
+        "Implement the Day 32 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Expose a read-only progress tool with a JSON schema and a structured result.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d32-q1",
+          "prompt": "What belongs in a tool input schema?",
+          "options": [
+            "Typed fields, required values and validation constraints",
+            "A secret access token as a default",
+            "Only a description of the UI",
+            "Unspecified arbitrary commands"
+          ],
+          "answer": 0,
+          "explanation": "Typed fields, required values and validation constraints."
+        },
+        {
+          "id": "d32-q2",
+          "prompt": "Should a progress-reader schema include a secret token default?",
+          "options": [
+            "Yes, defaults are hidden from clients",
+            "Yes, if the description says private",
+            "Only if the token is long",
+            "No; secrets belong in trusted connection configuration"
+          ],
+          "answer": 3,
+          "explanation": "No; secrets belong in trusted connection configuration."
+        }
+      ]
+    },
+    {
+      "day": 33,
+      "module": 6,
+      "title": "MCP server implementation",
+      "outcome": "Handle protocol messages explicitly",
+      "minutes": 90,
+      "lesson": "A protocol server must distinguish valid methods, unknown methods and tool execution errors. Implement discovery and tool listing according to the supported protocol version. Test malformed requests and missing arguments. A failed persistence operation must produce an error rather than a fabricated saved result.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: handle protocol messages explicitly.",
+        "Implement the Day 33 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Implement discovery, tools listing and tool calling; test an unknown method and invalid arguments.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d33-q1",
+          "prompt": "How should an invalid protocol request be handled?",
+          "options": [
+            "Crash the server",
+            "Pretend the request succeeded",
+            "Execute arbitrary fields",
+            "Return the appropriate structured protocol error"
+          ],
+          "answer": 3,
+          "explanation": "Return the appropriate structured protocol error."
+        },
+        {
+          "id": "d33-q2",
+          "prompt": "A tool writes to storage but the database rejects the write. What response is truthful?",
+          "options": [
+            "A fabricated quiz score",
+            "An empty success response",
+            "A tool error indicating the record was not saved",
+            "A saved message with an invented identifier"
+          ],
+          "answer": 2,
+          "explanation": "A tool error indicating the record was not saved."
+        }
+      ]
+    },
+    {
+      "day": 34,
+      "module": 6,
+      "title": "Remote transport & sessions",
+      "outcome": "Understand hosted tool requests",
+      "minutes": 90,
+      "lesson": "An HTTP-hosted tool server may handle each request on a different instance. Durable state belongs in a database rather than a module variable. Verify content types, request size limits, protocol errors and repeated calls. Transport success does not imply business success: inspect the returned operation result too.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: understand hosted tool requests.",
+        "Implement the Day 34 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Host an HTTP tool endpoint locally and test content type, errors and multiple requests.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d34-q1",
+          "prompt": "Why make request handling stateless when possible?",
+          "options": [
+            "To bypass authentication",
+            "To share secrets in URLs",
+            "To avoid relying on process memory across instances",
+            "To remove database persistence"
+          ],
+          "answer": 2,
+          "explanation": "To avoid relying on process memory across instances."
+        },
+        {
+          "id": "d34-q2",
+          "prompt": "A new server instance handles the next request. Where should prior submissions live?",
+          "options": [
+            "Only in a console log",
+            "In durable storage accessible to the instance",
+            "Only in the old instance’s module variable",
+            "Only in an unsent browser form"
+          ],
+          "answer": 1,
+          "explanation": "In durable storage accessible to the instance."
+        }
+      ]
+    },
+    {
+      "day": 35,
+      "module": 6,
+      "title": "OAuth & authorization",
+      "outcome": "Bind access to the correct resource",
+      "minutes": 90,
+      "lesson": "OAuth delegates access to a defined resource with limited permissions. PKCE binds authorization-code redemption to the initiating client. Validate token issuer, audience, expiry and permissions at the trusted boundary or use a platform that enforces them. Keep tokens outside URLs and client bundles. A successful login alone is not record authorization.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: bind access to the correct resource.",
+        "Implement the Day 35 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Document an OAuth flow with PKCE and test expired-token and wrong-resource rejection at the boundary.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d35-q1",
+          "prompt": "What does PKCE protect in an authorization-code flow?",
+          "options": [
+            "The browser’s color theme",
+            "Code redemption by binding it to the initiating client",
+            "The truth of model output",
+            "Every database query automatically"
+          ],
+          "answer": 1,
+          "explanation": "Code redemption by binding it to the initiating client."
+        },
+        {
+          "id": "d35-q2",
+          "prompt": "A valid access token is for a different resource. What next?",
+          "options": [
+            "Reject it at the authorization boundary",
+            "Accept it because its signature is valid",
+            "Ignore the audience claim",
+            "Turn it into an administrator credential"
+          ],
+          "answer": 0,
+          "explanation": "Reject it at the authorization boundary."
+        }
+      ]
+    },
+    {
+      "day": 36,
+      "module": 6,
+      "title": "Read & write permissions",
+      "outcome": "Separate observation from mutation",
+      "minutes": 90,
+      "lesson": "Read and write are different capabilities. A progress reader should not submit work or approve assignments. Enforce the distinction on the server, not only in tool descriptions. Test that a read-only caller is rejected when it attempts a write. Final approval can be a separate learner-controlled action even when a reviewer suggests scores.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: separate observation from mutation.",
+        "Implement the Day 36 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Create separate read and write capabilities and prove a read-only caller cannot submit work.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d36-q1",
+          "prompt": "What should a read-only credential permit?",
+          "options": [
+            "Only approved read operations",
+            "All writes if the prompt asks nicely",
+            "Administrative role changes",
+            "Secret rotation"
+          ],
+          "answer": 0,
+          "explanation": "Only approved read operations."
+        },
+        {
+          "id": "d36-q2",
+          "prompt": "A reader invokes a submission-write endpoint. What must enforce rejection?",
+          "options": [
+            "Only the hidden navigation button",
+            "Only a tool description",
+            "Only the model’s willingness to comply",
+            "Server-side authorization for that operation"
+          ],
+          "answer": 3,
+          "explanation": "Server-side authorization for that operation."
+        }
+      ]
+    },
+    {
+      "day": 37,
+      "module": 6,
+      "title": "Cross-account learning records",
+      "outcome": "Connect accounts to one authorized workspace",
+      "minutes": 90,
+      "lesson": "Two accounts can share an external learning workspace after each is explicitly authorized. Their conversation histories remain separate. Store the workspace identifier independently of the caller identity and retain the actor for auditing. Verify both invited identities see the same record while an uninvited caller is rejected by the access boundary.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: connect accounts to one authorized workspace.",
+        "Implement the Day 37 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Use two test identities to access the same explicitly shared profile; verify an uninvited identity is rejected.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d37-q1",
+          "prompt": "How can two ChatGPT accounts share learning progress?",
+          "options": [
+            "Automatically merge their private chat histories",
+            "Publish all assignment answers",
+            "Disable login",
+            "Authorize both to the same external workspace"
+          ],
+          "answer": 3,
+          "explanation": "Authorize both to the same external workspace."
+        },
+        {
+          "id": "d37-q2",
+          "prompt": "A second ChatGPT account has not been invited to the learning workspace. What should happen?",
+          "options": [
+            "Make the whole database public",
+            "Copy the first account’s conversation history",
+            "Deny access until explicit authorization",
+            "Share the records because both accounts use ChatGPT"
+          ],
+          "answer": 2,
+          "explanation": "Deny access until explicit authorization."
+        }
+      ]
+    },
+    {
+      "day": 38,
+      "module": 6,
+      "title": "Integration failure tests",
+      "outcome": "Test identity and tool boundaries",
+      "minutes": 90,
+      "lesson": "Integration tests should exercise the actual boundaries between identity, protocol handling, validation and persistence. Include missing identity, malformed input, a storage failure and an unauthorized operation. Check the resulting database state after failure so a rejected request does not quietly leave a partial write.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: test identity and tool boundaries.",
+        "Implement the Day 38 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Test missing identity, invalid inputs, failed persistence and unauthorized tool calls.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d38-q1",
+          "prompt": "Which integration test checks isolation?",
+          "options": [
+            "A public link opens",
+            "The quiz has two questions",
+            "An uninvited caller cannot read the private profile",
+            "The page has a logo"
+          ],
+          "answer": 2,
+          "explanation": "An uninvited caller cannot read the private profile."
+        },
+        {
+          "id": "d38-q2",
+          "prompt": "An unauthorized request is rejected. What else should the test check?",
+          "options": [
+            "That the error was not logged anywhere",
+            "That no learning record was changed",
+            "Only the page title",
+            "Only the response text length"
+          ],
+          "answer": 1,
+          "explanation": "That no learning record was changed."
+        }
+      ]
+    },
+    {
+      "day": 39,
+      "module": 6,
+      "title": "Multi-agent & MCP checkpoint",
+      "outcome": "Demonstrate a useful connected workflow",
+      "minutes": 90,
+      "lesson": "Demonstrate the full connected workflow: a client reads objectives, submits real evidence, receives review feedback and reloads the persisted record. Capture rejected calls as well as successful ones. Tool names in a README prove only an intended interface; observed, durable results prove an implemented path.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: demonstrate a useful connected workflow.",
+        "Implement the Day 39 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Connect a progress reader and submission tool; save traces for success and rejection cases.",
+      "resources": [
+        {
+          "label": "Multi-Agent & MCP · primary documentation",
+          "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d39-q1",
+          "prompt": "What is convincing integration evidence?",
+          "options": [
+            "Only a diagram",
+            "Real persisted results plus observed failure cases",
+            "A tool name listed in a README only",
+            "A mock success banner"
+          ],
+          "answer": 1,
+          "explanation": "Real persisted results plus observed failure cases."
+        },
+        {
+          "id": "d39-q2",
+          "prompt": "Which observation confirms the submission integration more strongly?",
+          "options": [
+            "A later authenticated request reads the saved evidence",
+            "The button says Submitted",
+            "The README lists submit_assignment",
+            "The form has a green border"
+          ],
+          "answer": 0,
+          "explanation": "A later authenticated request reads the saved evidence."
+        }
+      ]
+    },
+    {
+      "day": 40,
+      "module": 7,
+      "title": "Evaluation datasets",
+      "outcome": "Create repeatable quality checks",
+      "minutes": 90,
+      "lesson": "An evaluation dataset contains representative inputs and predefined expected behavior. Include routine tasks, ambiguous requests and failure cases. Record provenance and exclusions. Keep a development set for iteration and a separate final set for reporting so changes are not repeatedly tuned to the same held-out examples.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: create repeatable quality checks.",
+        "Implement the Day 40 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Write ten representative evaluation cases with expected behavior and a separate development set.",
+      "resources": [
+        {
+          "label": "Production Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/agent-evals"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d40-q1",
+          "prompt": "Why keep evaluation cases separate from development examples?",
+          "options": [
+            "To reduce tuning directly to the test set",
+            "To avoid writing expected outcomes",
+            "To guarantee perfect scores",
+            "To make failures invisible"
+          ],
+          "answer": 0,
+          "explanation": "To reduce tuning directly to the test set."
+        },
+        {
+          "id": "d40-q2",
+          "prompt": "You tuned the prompt using every final evaluation example. What is needed?",
+          "options": [
+            "Reporting those examples as untouched tests",
+            "Removing failed examples from the report",
+            "Calling the training examples a benchmark",
+            "A fresh held-out evaluation with disclosed development choices"
+          ],
+          "answer": 3,
+          "explanation": "A fresh held-out evaluation with disclosed development choices."
+        }
+      ]
+    },
+    {
+      "day": 41,
+      "module": 7,
+      "title": "Metrics & regressions",
+      "outcome": "Measure useful outcomes separately",
+      "minutes": 90,
+      "lesson": "Measure different outcomes separately: task success, groundedness, latency and estimated cost. Define each metric before inspecting results and compare against a baseline. A longer answer or more tool calls is not automatically better. Preserve per-case results so an average cannot hide a critical failure.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: measure useful outcomes separately.",
+        "Implement the Day 41 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Track task success, latency, cost and unsupported claims for a fixed suite.",
+      "resources": [
+        {
+          "label": "Production Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/agent-evals"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d41-q1",
+          "prompt": "Which metric best measures task completion?",
+          "options": [
+            "Only answer length",
+            "Only tool count",
+            "Only token count",
+            "A predefined task-success criterion"
+          ],
+          "answer": 3,
+          "explanation": "A predefined task-success criterion."
+        },
+        {
+          "id": "d41-q2",
+          "prompt": "An average score improves while unauthorized-write tests start failing. What next?",
+          "options": [
+            "Remove permission tests from the metric",
+            "Count longer answers as compensation",
+            "Treat the permission regression as a release blocker",
+            "Ignore it because the average rose"
+          ],
+          "answer": 2,
+          "explanation": "Treat the permission regression as a release blocker."
+        }
+      ]
+    },
+    {
+      "day": 42,
+      "module": 7,
+      "title": "Prompt injection & untrusted data",
+      "outcome": "Keep retrieved text outside the instruction boundary",
+      "minutes": 90,
+      "lesson": "Retrieved pages and documents are untrusted data. A passage telling the agent to reveal keys or change permissions is not an authorized instruction. Enforce tool access outside the prompt and limit what each tool can do. Test malicious content with observable assertions about rejected actions and unchanged records.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: keep retrieved text outside the instruction boundary.",
+        "Implement the Day 42 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Add malicious document text to tests and verify it cannot change tool permissions.",
+      "resources": [
+        {
+          "label": "Production Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/agent-evals"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d42-q1",
+          "prompt": "How should instructions inside retrieved documents be treated?",
+          "options": [
+            "As permission to reveal secrets",
+            "As a reason to disable validation",
+            "As untrusted data unless explicitly authorized",
+            "As higher priority than system rules"
+          ],
+          "answer": 2,
+          "explanation": "As untrusted data unless explicitly authorized."
+        },
+        {
+          "id": "d42-q2",
+          "prompt": "A retrieved page says to reveal a private key. What should the system do?",
+          "options": [
+            "Disable tool permissions temporarily",
+            "Treat that text as untrusted data and reject the action",
+            "Obey because retrieval is trusted instruction",
+            "Paste the key into the final answer"
+          ],
+          "answer": 1,
+          "explanation": "Treat that text as untrusted data and reject the action."
+        }
+      ]
+    },
+    {
+      "day": 43,
+      "module": 7,
+      "title": "Secrets, privacy & access",
+      "outcome": "Minimize stored and exposed data",
+      "minutes": 90,
+      "lesson": "Minimize stored data and define who may access it. Keep secrets in server-side runtime configuration, redact logs and exclude private datasets from public source control. Authorization must protect each record operation. Document retention and recovery expectations using implemented behavior rather than broad promises.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: minimize stored and exposed data.",
+        "Implement the Day 43 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Document data retention, redact logs and test server-side record authorization.",
+      "resources": [
+        {
+          "label": "Production Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/agent-evals"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d43-q1",
+          "prompt": "Where should production secrets live?",
+          "options": [
+            "A query string",
+            "Server-side secret configuration",
+            "A public GitHub file",
+            "A browser bundle"
+          ],
+          "answer": 1,
+          "explanation": "Server-side secret configuration."
+        },
+        {
+          "id": "d43-q2",
+          "prompt": "A browser bundle contains a service key. What has gone wrong?",
+          "options": [
+            "A server secret was exposed to clients",
+            "The server has become more secure",
+            "Bundling automatically encrypts it",
+            "The key is protected by a variable name"
+          ],
+          "answer": 0,
+          "explanation": "A server secret was exposed to clients."
+        }
+      ]
+    },
+    {
+      "day": 44,
+      "module": 7,
+      "title": "Idempotency & durable jobs",
+      "outcome": "Make repeated requests safe",
+      "minutes": 90,
+      "lesson": "An idempotency key identifies one logical write across retries. Repeating the same key and payload should return the previous result; reusing a key for a different operation should conflict. Persist the key with the operation and enforce uniqueness atomically. Checking first without handling a simultaneous insertion leaves a race.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: make repeated requests safe.",
+        "Implement the Day 44 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Add an idempotency key to a simulated submission API and test a duplicate request.",
+      "resources": [
+        {
+          "label": "Production Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/agent-evals"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d44-q1",
+          "prompt": "What should repeating a request with the same idempotency key do?",
+          "options": [
+            "Return the prior result without duplicating the action",
+            "Create another record every time",
+            "Delete the original action",
+            "Ignore authorization"
+          ],
+          "answer": 0,
+          "explanation": "Return the prior result without duplicating the action."
+        },
+        {
+          "id": "d44-q2",
+          "prompt": "A retry reuses an idempotency key with different content. What response is appropriate?",
+          "options": [
+            "Silently overwrite the first request",
+            "Create two records with one key",
+            "Ignore the stored payload",
+            "A conflict rather than a second write"
+          ],
+          "answer": 3,
+          "explanation": "A conflict rather than a second write."
+        }
+      ]
+    },
+    {
+      "day": 45,
+      "module": 7,
+      "title": "Deployment & health checks",
+      "outcome": "Verify the deployed artifact",
+      "minutes": 90,
+      "lesson": "A build validates an artifact, while deployment validation checks the running service. Test health, rejected unauthorized requests and persistence across separate requests or restarts. Keep local test records separate from production. Record the exact revision deployed so failures can be traced and a rollback can identify its source.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: verify the deployed artifact.",
+        "Implement the Day 45 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Deploy a demo and test health, persistence after restart and a rejected unauthorized request.",
+      "resources": [
+        {
+          "label": "Production Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/agent-evals"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d45-q1",
+          "prompt": "What must be verified beyond a successful build?",
+          "options": [
+            "Only the build log color",
+            "Only the repository name",
+            "Only the screenshot size",
+            "The deployed app’s behavior and durable storage"
+          ],
+          "answer": 3,
+          "explanation": "The deployed app’s behavior and durable storage."
+        },
+        {
+          "id": "d45-q2",
+          "prompt": "The build passes but the live save endpoint fails. What is the release status?",
+          "options": [
+            "Complete after changing the screenshot",
+            "Reliable if the homepage looks correct",
+            "Deployment behavior is not verified; diagnose the save failure",
+            "Fully ready because compilation succeeded"
+          ],
+          "answer": 2,
+          "explanation": "Deployment behavior is not verified; diagnose the save failure."
+        }
+      ]
+    },
+    {
+      "day": 46,
+      "module": 7,
+      "title": "Production readiness review",
+      "outcome": "Document limits before a release",
+      "minutes": 90,
+      "lesson": "Readiness combines reliability, access controls, observability, recovery and operating limits. For each item, state the evidence, result and remaining gap. A demo can be useful with documented limitations. Avoid claiming production reliability from a single successful request or from tests that never exercise deployment.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: document limits before a release.",
+        "Implement the Day 46 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Run a readiness checklist against reliability, permissions, recovery and costs; record remaining gaps.",
+      "resources": [
+        {
+          "label": "Production Engineering · primary documentation",
+          "url": "https://platform.openai.com/docs/guides/agent-evals"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d46-q1",
+          "prompt": "What should a readiness report include?",
+          "options": [
+            "Unverified uptime guarantees",
+            "Only a feature wish list",
+            "Known gaps with observed evidence and their impact",
+            "Only positive findings"
+          ],
+          "answer": 2,
+          "explanation": "Known gaps with observed evidence and their impact."
+        },
+        {
+          "id": "d46-q2",
+          "prompt": "A demo has no verified recovery procedure. How should readiness describe it?",
+          "options": [
+            "Report 100% production readiness",
+            "State the recovery gap and its practical impact",
+            "Claim backups guarantee recovery",
+            "Omit all negative findings"
+          ],
+          "answer": 1,
+          "explanation": "State the recovery gap and its practical impact."
+        }
+      ]
+    },
+    {
+      "day": 47,
+      "module": 8,
+      "title": "Capstone problem & user",
+      "outcome": "Choose a bounded real-world problem",
+      "minutes": 150,
+      "lesson": "Choose one real user and one bounded problem for the capstone. Describe their current workflow, the friction and a measurable improvement. List constraints such as data access, budget and latency. The product should still be useful if its AI component is replaced with a deterministic baseline.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: choose a bounded real-world problem.",
+        "Implement the Day 47 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Write a one-page problem statement with one target user, constraints and a measurable outcome.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d47-q1",
+          "prompt": "What makes a capstone problem actionable?",
+          "options": [
+            "A promise to solve every task",
+            "A specific user and a measurable, bounded outcome",
+            "An unlimited list of AI features",
+            "Only a product name"
+          ],
+          "answer": 1,
+          "explanation": "A specific user and a measurable, bounded outcome."
+        },
+        {
+          "id": "d47-q2",
+          "prompt": "Your capstone description says help everyone with everything. What is the next useful step?",
+          "options": [
+            "Choose one target user and a bounded measurable problem",
+            "Add more unrelated features",
+            "Start unlimited autonomous agents",
+            "Skip requirements until after launch"
+          ],
+          "answer": 0,
+          "explanation": "Choose one target user and a bounded measurable problem."
+        }
+      ]
+    },
+    {
+      "day": 48,
+      "module": 8,
+      "title": "Requirements & acceptance criteria",
+      "outcome": "Define what completion means",
+      "minutes": 150,
+      "lesson": "Acceptance criteria define observable pass or fail behavior. Replace vague goals such as smart interface with concrete outcomes such as a saved submission remains after reload. Map each requirement to a test, walkthrough or measured case. Include empty, error and unauthorized states alongside the happy path.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: define what completion means.",
+        "Implement the Day 48 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Write five acceptance criteria and map each to a test or review activity.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d48-q1",
+          "prompt": "What is a useful acceptance criterion?",
+          "options": [
+            "An observable behavior with pass/fail conditions",
+            "The app should feel futuristic",
+            "Use as many agents as possible",
+            "The model should always know"
+          ],
+          "answer": 0,
+          "explanation": "An observable behavior with pass/fail conditions."
+        },
+        {
+          "id": "d48-q2",
+          "prompt": "Which acceptance criterion is testable?",
+          "options": [
+            "The app feels intelligent",
+            "The dashboard looks premium",
+            "The system uses modern AI",
+            "A submitted assignment remains available after reload"
+          ],
+          "answer": 3,
+          "explanation": "A submitted assignment remains available after reload."
+        }
+      ]
+    },
+    {
+      "day": 49,
+      "module": 8,
+      "title": "Architecture & data flow",
+      "outcome": "Show trust boundaries and persistence",
+      "minutes": 150,
+      "lesson": "Architecture assigns responsibilities and shows where data crosses trust boundaries. Identify the browser, server, durable store and external model calls. For each boundary explain validation, identity and failure behavior. Keep diagrams focused enough that a reviewer can follow one primary operation from input to persisted result.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: show trust boundaries and persistence.",
+        "Implement the Day 49 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Draw components, data ownership and external calls; explain each failure boundary.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d49-q1",
+          "prompt": "What should an architecture diagram make clear?",
+          "options": [
+            "Only decorative icons",
+            "Only the brand colors",
+            "Only the number of files",
+            "Data flow, responsibilities and trust boundaries"
+          ],
+          "answer": 3,
+          "explanation": "Data flow, responsibilities and trust boundaries."
+        },
+        {
+          "id": "d49-q2",
+          "prompt": "A diagram omits the durable store. What important question is unanswered?",
+          "options": [
+            "How many icons to add",
+            "Whether the title is centered",
+            "Where records persist and who may access them",
+            "Which accent color to use"
+          ],
+          "answer": 2,
+          "explanation": "Where records persist and who may access them."
+        }
+      ]
+    },
+    {
+      "day": 50,
+      "module": 8,
+      "title": "Dataset & evaluation plan",
+      "outcome": "Create representative capstone cases",
+      "minutes": 150,
+      "lesson": "Select data that is relevant, lawful to use and sufficient for the bounded task. Record origin, preprocessing and exclusions. Create expected outputs or review criteria before tuning the system. Separate evaluation cases from examples used to develop prompts or retrieval settings.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: create representative capstone cases.",
+        "Implement the Day 50 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build a small lawful dataset and evaluation set; record provenance and exclusions.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d50-q1",
+          "prompt": "Why record dataset provenance?",
+          "options": [
+            "To skip evaluation",
+            "To expose private data",
+            "To assess permission, relevance and reproducibility",
+            "To guarantee all labels are correct"
+          ],
+          "answer": 2,
+          "explanation": "To assess permission, relevance and reproducibility."
+        },
+        {
+          "id": "d50-q2",
+          "prompt": "You cannot establish permission to use a dataset. What next?",
+          "options": [
+            "Publish private records as examples",
+            "Resolve permission or choose an appropriate alternative",
+            "Assume public visibility permits every use",
+            "Remove provenance notes"
+          ],
+          "answer": 1,
+          "explanation": "Resolve permission or choose an appropriate alternative."
+        }
+      ]
+    },
+    {
+      "day": 51,
+      "module": 8,
+      "title": "Backend & persistence",
+      "outcome": "Implement a durable vertical slice",
+      "minutes": 150,
+      "lesson": "A vertical slice connects a validated request, authorization, a durable write and a subsequent read. Implement this small path before broadening the feature set. Use parameterized queries and stable identifiers. Verify invalid requests do not write anything and a new request can read the saved object.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: implement a durable vertical slice.",
+        "Implement the Day 51 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build the core create/read flow with validation, authorization and persistence.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d51-q1",
+          "prompt": "What demonstrates persistence?",
+          "options": [
+            "A screenshot without a reload",
+            "The record remains available across new requests and restarts",
+            "A local JavaScript variable",
+            "A success toast alone"
+          ],
+          "answer": 1,
+          "explanation": "The record remains available across new requests and restarts."
+        },
+        {
+          "id": "d51-q2",
+          "prompt": "A success toast appears but reload loses the record. What is missing?",
+          "options": [
+            "A verified durable create/read path",
+            "A more visible toast",
+            "A longer form label",
+            "A second frontend animation"
+          ],
+          "answer": 0,
+          "explanation": "A verified durable create/read path."
+        }
+      ]
+    },
+    {
+      "day": 52,
+      "module": 8,
+      "title": "Core agent workflow",
+      "outcome": "Connect the minimum useful tools",
+      "minutes": 150,
+      "lesson": "Build the minimum useful agent path with narrow tools and explicit stopping rules. Use a mock model to test routing and failures without paid requests. Record the allowed actions and their results. Add a live model only after the business rules and error behavior are independently testable.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: connect the minimum useful tools.",
+        "Implement the Day 52 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Implement the core agent with bounded actions, a mock model and recorded tool results.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d52-q1",
+          "prompt": "What is the most useful first workflow?",
+          "options": [
+            "The smallest end-to-end path that meets a user need",
+            "Every planned feature at once",
+            "An unbounded autonomous loop",
+            "Only a landing page"
+          ],
+          "answer": 0,
+          "explanation": "The smallest end-to-end path that meets a user need."
+        },
+        {
+          "id": "d52-q2",
+          "prompt": "The core workflow has not worked end to end. What should you prioritize?",
+          "options": [
+            "Every planned feature simultaneously",
+            "A large specialist hierarchy",
+            "Replacing tests with a diagram",
+            "One bounded vertical slice with observable results"
+          ],
+          "answer": 3,
+          "explanation": "One bounded vertical slice with observable results."
+        }
+      ]
+    },
+    {
+      "day": 53,
+      "module": 8,
+      "title": "Frontend learning experience",
+      "outcome": "Make state and errors understandable",
+      "minutes": 150,
+      "lesson": "An interface should communicate loading, empty, error and saved states. Preserve a user’s input after a failed save and avoid showing success before the server confirms persistence. Make controls usable by keyboard and on narrow screens. Show actual progress values instead of seeded demonstration scores.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: make state and errors understandable.",
+        "Implement the Day 53 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Build the main interaction with loading, error, empty and success states.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d53-q1",
+          "prompt": "What should happen after a failed save?",
+          "options": [
+            "Show a success notification",
+            "Clear the user’s input silently",
+            "Hide the error forever",
+            "Show an actionable error without claiming the data was saved"
+          ],
+          "answer": 3,
+          "explanation": "Show an actionable error without claiming the data was saved."
+        },
+        {
+          "id": "d53-q2",
+          "prompt": "A save fails while the learner is writing an assignment. What should the UI preserve?",
+          "options": [
+            "A blank form with no explanation",
+            "A completion score that was not stored",
+            "Their input and a clear retryable error",
+            "Only the success animation"
+          ],
+          "answer": 2,
+          "explanation": "Their input and a clear retryable error."
+        }
+      ]
+    },
+    {
+      "day": 54,
+      "module": 8,
+      "title": "Human review & feedback",
+      "outcome": "Keep evaluation decisions auditable",
+      "minutes": 150,
+      "lesson": "A review connects feedback and a suggested score to a specific submission version. A new submission should invalidate the old approval. Keep reviewer judgment separate from the learner’s final approval and record both actions. Explain that reading pasted output does not independently execute or verify the submitted program.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: keep evaluation decisions auditable.",
+        "Implement the Day 54 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Add a submission review with score, feedback and an explicit approval decision.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d54-q1",
+          "prompt": "Why separate a suggested score from approval?",
+          "options": [
+            "So failed submissions disappear",
+            "So all work is automatically complete",
+            "So a reviewer can inspect and accept the decision",
+            "So the app can invent credentials"
+          ],
+          "answer": 2,
+          "explanation": "So a reviewer can inspect and accept the decision."
+        },
+        {
+          "id": "d54-q2",
+          "prompt": "An assignment is revised after approval. What should happen?",
+          "options": [
+            "Mark it complete without checking evidence",
+            "The new version needs a new review and approval",
+            "The earlier approval covers any replacement",
+            "Delete its submission history"
+          ],
+          "answer": 1,
+          "explanation": "The new version needs a new review and approval."
+        }
+      ]
+    },
+    {
+      "day": 55,
+      "module": 8,
+      "title": "Security & adversarial cases",
+      "outcome": "Test your actual product boundaries",
+      "minutes": 150,
+      "lesson": "Security tests should match the product’s actual data and capabilities. Try unauthorized reads, invalid writes and malicious retrieved instructions. Assert what must remain unchanged after rejection. A cosmetic UI check cannot establish authorization. Document the boundary tested and the limits of local mocks.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: test your actual product boundaries.",
+        "Implement the Day 55 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Run prompt injection, unauthorized access and invalid-input tests against the capstone.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d55-q1",
+          "prompt": "Which test checks a write permission boundary?",
+          "options": [
+            "The route has a short name",
+            "An unauthorized caller cannot mutate a record",
+            "The heading fits a mobile screen",
+            "The icon loads"
+          ],
+          "answer": 1,
+          "explanation": "An unauthorized caller cannot mutate a record."
+        },
+        {
+          "id": "d55-q2",
+          "prompt": "A permission test uses a mocked always-authorized caller. What remains untested?",
+          "options": [
+            "Rejection at the real authorization boundary",
+            "The spelling of the tool name",
+            "The UI color",
+            "Whether a JSON object can exist"
+          ],
+          "answer": 0,
+          "explanation": "Rejection at the real authorization boundary."
+        }
+      ]
+    },
+    {
+      "day": 56,
+      "module": 8,
+      "title": "Performance & cost budget",
+      "outcome": "Measure before optimizing",
+      "minutes": 150,
+      "lesson": "Measure latency and cost on representative cases before optimizing. Record p50 and p95 only when the sample size supports useful interpretation, and disclose small samples. Separate model time, retrieval and tool execution. Set explicit budgets and test behavior when a request reaches them.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: measure before optimizing.",
+        "Implement the Day 56 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Measure latency and estimated cost across ten cases; set explicit limits.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d56-q1",
+          "prompt": "What should drive performance optimization?",
+          "options": [
+            "Measured bottlenecks against a stated budget",
+            "Assumptions from one screenshot",
+            "Only framework popularity",
+            "Only code line count"
+          ],
+          "answer": 0,
+          "explanation": "Measured bottlenecks against a stated budget."
+        },
+        {
+          "id": "d56-q2",
+          "prompt": "You have measured only one latency sample. What claim is justified?",
+          "options": [
+            "A stable population p95 estimate",
+            "Guaranteed service latency",
+            "A universal speed comparison",
+            "One observed latency with the sample-size limit stated"
+          ],
+          "answer": 3,
+          "explanation": "One observed latency with the sample-size limit stated."
+        }
+      ]
+    },
+    {
+      "day": 57,
+      "module": 8,
+      "title": "Deploy & recover",
+      "outcome": "Verify release and recovery paths",
+      "minutes": 150,
+      "lesson": "A release needs a known revision, migration plan and recovery procedure. Export records, restore them into a separate test environment and compare key fields. A file named backup is not proof of recoverability. Keep production credentials separate and document any manual steps honestly.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: verify release and recovery paths.",
+        "Implement the Day 57 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Deploy the capstone, export its records and demonstrate one recovery scenario.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d57-q1",
+          "prompt": "What makes a backup useful?",
+          "options": [
+            "Its filename alone",
+            "Storing it only in volatile memory",
+            "A promise to back up later",
+            "A verified restore procedure for its contents"
+          ],
+          "answer": 3,
+          "explanation": "A verified restore procedure for its contents."
+        },
+        {
+          "id": "d57-q2",
+          "prompt": "A JSON export has never been restored. What can you claim?",
+          "options": [
+            "Restoration is automatic",
+            "No database protection is needed",
+            "An export exists; recoverability remains unverified",
+            "Disaster recovery is proven"
+          ],
+          "answer": 2,
+          "explanation": "An export exists; recoverability remains unverified."
+        }
+      ]
+    },
+    {
+      "day": 58,
+      "module": 8,
+      "title": "User acceptance & iteration",
+      "outcome": "Improve from observed use",
+      "minutes": 150,
+      "lesson": "User acceptance checks whether the main workflow serves its intended user. Observe a walkthrough, record reproducible failures and map them to acceptance criteria. Fix the issue that blocks the primary task before adding decoration. Re-run the failed criterion after the change and retain the result.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: improve from observed use.",
+        "Implement the Day 58 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Ask a tester or perform a documented walkthrough; fix the highest-impact failed acceptance criterion.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d58-q1",
+          "prompt": "Which feedback should be addressed first?",
+          "options": [
+            "An unverified trend",
+            "The longest comment only",
+            "A reproducible failure blocking the primary user task",
+            "A random cosmetic preference"
+          ],
+          "answer": 2,
+          "explanation": "A reproducible failure blocking the primary user task."
+        },
+        {
+          "id": "d58-q2",
+          "prompt": "A tester cannot submit the main assignment. What should be fixed first?",
+          "options": [
+            "The footer’s marketing wording",
+            "The reproducible submission blocker",
+            "A decorative secondary animation",
+            "An optional new badge"
+          ],
+          "answer": 1,
+          "explanation": "The reproducible submission blocker."
+        }
+      ]
+    },
+    {
+      "day": 59,
+      "module": 8,
+      "title": "Documentation & portfolio evidence",
+      "outcome": "Explain results honestly",
+      "minutes": 150,
+      "lesson": "Documentation should let another developer run the project and understand its limits. Include setup, architecture, environment variable names, evaluation results and a short demo script. Keep keys and private learning records out of the repository. Distinguish implemented behavior from planned features.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: explain results honestly.",
+        "Implement the Day 59 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Write setup instructions, architecture, evaluation results, limitations and a short demo script.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d59-q1",
+          "prompt": "What belongs in a credible portfolio report?",
+          "options": [
+            "Only a dependency list",
+            "Measured results, reproducible setup and honest limitations",
+            "Fabricated accuracy numbers",
+            "Only a logo"
+          ],
+          "answer": 1,
+          "explanation": "Measured results, reproducible setup and honest limitations."
+        },
+        {
+          "id": "d59-q2",
+          "prompt": "A feature is described in the README but not implemented. How should it be labelled?",
+          "options": [
+            "Planned or unsupported, with the current limit stated",
+            "Completed because documentation exists",
+            "Production ready by default",
+            "Verified without running it"
+          ],
+          "answer": 0,
+          "explanation": "Planned or unsupported, with the current limit stated."
+        }
+      ]
+    },
+    {
+      "day": 60,
+      "module": 8,
+      "title": "Final demonstration & reflection",
+      "outcome": "Demonstrate growth with evidence",
+      "minutes": 150,
+      "lesson": "Compare the final product with your Day 1 baseline using comparable evidence. Demonstrate the deployed workflow, acceptance results and remaining limitations. Identify which skills you can explain, implement and teach. A streak is useful motivation, but reproducible work and observed improvement support your engineering claims.\n\nWork through the linked primary documentation, then implement today's exercise. Use mocks or a local model when needed. Keep a working example, a failed case and a short explanation of what the results demonstrate.",
+      "objectives": [
+        "Explain: demonstrate growth with evidence.",
+        "Implement the Day 60 practical exercise and record its output.",
+        "Test a failure case and document what you learned."
+      ],
+      "assignment": "Run the acceptance suite, show the deployed product and compare your skills with Day 1.",
+      "resources": [
+        {
+          "label": "Capstone · primary documentation",
+          "url": "https://docs.github.com/en/actions"
+        }
+      ],
+      "rubric": [
+        {
+          "name": "Concept & explanation",
+          "points": 20
+        },
+        {
+          "name": "Working implementation",
+          "points": 40
+        },
+        {
+          "name": "Failure-case testing",
+          "points": 25
+        },
+        {
+          "name": "Reproducible evidence",
+          "points": 15
+        }
+      ],
+      "questions": [
+        {
+          "id": "d60-q1",
+          "prompt": "What supports a claim of engineering improvement?",
+          "options": [
+            "Comparable baseline and final evidence with known limitations",
+            "A streak alone",
+            "A certificate image alone",
+            "The number of tabs opened"
+          ],
+          "answer": 0,
+          "explanation": "Comparable baseline and final evidence with known limitations."
+        },
+        {
+          "id": "d60-q2",
+          "prompt": "Which final comparison supports engineering growth?",
+          "options": [
+            "Only a longer learning streak",
+            "Only a larger number of browser tabs",
+            "Only a certificate image",
+            "Comparable baseline and final implementations with observed results"
+          ],
+          "answer": 3,
+          "explanation": "Comparable baseline and final implementations with observed results."
+        }
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "id": 1,
+      "name": "API Engineering",
+      "start": 1,
+      "end": 2,
+      "color": "#b9a0ff",
+      "icon": "{ }",
+      "description": "Build the contracts your agents depend on.",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP"
+    },
+    {
+      "id": 2,
+      "name": "LLM Engineering",
+      "start": 3,
+      "end": 6,
+      "color": "#8bb9fa",
+      "icon": "✳",
+      "description": "Understand models, prompts and structured outputs.",
+      "url": "https://platform.openai.com/docs/overview"
+    },
+    {
+      "id": 3,
+      "name": "Agent Fundamentals",
+      "start": 7,
+      "end": 13,
+      "color": "#efad83",
+      "icon": "↗",
+      "description": "Turn model outputs into controlled actions.",
+      "url": "https://platform.openai.com/docs/guides/function-calling"
+    },
+    {
+      "id": 4,
+      "name": "Memory & RAG",
+      "start": 14,
+      "end": 17,
+      "color": "#8fd7c5",
+      "icon": "◈",
+      "description": "Ground your agents in useful, retrievable evidence.",
+      "url": "https://platform.openai.com/docs/guides/retrieval"
+    },
+    {
+      "id": 5,
+      "name": "Agent Frameworks",
+      "start": 18,
+      "end": 25,
+      "color": "#d4afeb",
+      "icon": "⌘",
+      "description": "Build stateful workflows with explicit control.",
+      "url": "https://openai.github.io/openai-agents-python/"
+    },
+    {
+      "id": 6,
+      "name": "Multi-Agent & MCP",
+      "start": 26,
+      "end": 39,
+      "color": "#e6cd86",
+      "icon": "⋈",
+      "description": "Coordinate specialists and connect real tools.",
+      "url": "https://modelcontextprotocol.io/docs/getting-started/intro"
+    },
+    {
+      "id": 7,
+      "name": "Production Engineering",
+      "start": 40,
+      "end": 46,
+      "color": "#e89faa",
+      "icon": "▣",
+      "description": "Measure reliability, protect data and deploy.",
+      "url": "https://platform.openai.com/docs/guides/agent-evals"
+    },
+    {
+      "id": 8,
+      "name": "Capstone",
+      "start": 47,
+      "end": 60,
+      "color": "#a4c991",
+      "icon": "⚑",
+      "description": "Ship a useful product with evidence that it works.",
+      "url": "https://docs.github.com/en/actions"
+    }
+  ]
+}

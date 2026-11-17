@@ -1,0 +1,27 @@
+name: Spring product
+on:
+  push:
+    branches: [main, product/spring-learning-hub]
+  pull_request:
+    paths: ['spring-app/**', 'Dockerfile', '.github/workflows/spring.yml']
+permissions:
+  contents: read
+jobs:
+  product:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: spring-app/pom.xml
+      - name: Test and package Spring Boot product
+        run: mvn -B -f spring-app/pom.xml verify
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agenticsl-spring-product
+          path: spring-app/target/learning-hub-1.0.0.jar
+          if-no-files-found: error
+          retention-days: 30
