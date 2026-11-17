@@ -1,0 +1,22 @@
+name: Live Render product
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/live-smoke.yml', 'release/verify-render.json']
+permissions:
+  contents: read
+jobs:
+  live-demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify deployed product without private credentials
+        run: |
+          for attempt in $(seq 1 12); do
+            if curl --max-time 20 -fsS https://agenticsl-learning-hub.onrender.com/actuator/health | grep -q 'UP'; then break; fi
+            sleep 5
+          done
+          python scripts/smoke-spring.py https://agenticsl-learning-hub.onrender.com

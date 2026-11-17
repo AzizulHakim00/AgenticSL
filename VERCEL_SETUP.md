@@ -1,5 +1,7 @@
 # Vercel setup
 
+> **Legacy prototype:** the requested product now runs on Spring Boot, Thymeleaf, Spring Security, MongoDB Atlas and Render. Follow the root [README](README.md) for the current product. Supabase is not required for the Spring release; this document is retained only for the earlier prototype.
+
 Vercel serves the application at `https://agenticsl.vercel.app`. The original ChatGPT Sites sign-in route and D1 binding are hosting-specific and are not provided by Vercel. This deployment uses Supabase Auth and PostgreSQL through `api/index.mjs` and `src/vercel.mjs`.
 
 ## Finish setup
