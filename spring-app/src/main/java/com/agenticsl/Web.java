@@ -20,7 +20,7 @@ public class Web {
   Learning.Actor actor(HttpServletRequest request,Authentication authentication){
     if(request.getRequestURI().startsWith("/api/demo")||request.getRequestURI().equals("/demo"))return new Learning.Actor("demo:"+request.getSession().getId(),"Demo learner",false,true);
     if(authentication==null||!(authentication.getPrincipal() instanceof OAuth2User u))throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Sign in with GitHub.");
-    String id=String.valueOf(u.getAttribute("id")),login=String.valueOf(u.getAttribute("login"));
+    String id=String.valueOf(u.getAttributes().get("id")),login=String.valueOf(u.getAttributes().get("login"));
     return new Learning.Actor(id,login,id.equals(settings.adminId),false);
   }
   @GetMapping("/")String home(Model m,Authentication a){m.addAttribute("modules",course.modules);m.addAttribute("oauthReady",settings.oauthReady());m.addAttribute("signedIn",a!=null);return "home";}

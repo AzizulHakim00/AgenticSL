@@ -36,7 +36,7 @@ public class Security {
       .headers(h->h.contentSecurityPolicy(c->c.policyDirectives("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'self'")));
     if(clients.getIfAvailable()!=null)http.oauth2Login(o->o.loginPage("/login").defaultSuccessUrl("/dashboard",true).userInfoEndpoint(u->u.userService(request->{
       var user=new DefaultOAuth2UserService().loadUser(request);
-      var id=String.valueOf(user.getAttribute("id"));
+      var id=String.valueOf(user.getAttributes().get("id"));
       Set<org.springframework.security.core.GrantedAuthority> roles=new HashSet<>(user.getAuthorities());roles.add(new SimpleGrantedAuthority(id.equals(s.adminId)?"ROLE_ADMIN":"ROLE_LEARNER"));
       return new DefaultOAuth2User(roles,user.getAttributes(),"id");
     })));
