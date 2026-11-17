@@ -1,0 +1,20 @@
+name: Assignment evidence
+on:
+  pull_request:
+    branches: ['learners/**']
+    paths: ['assignments/day-01/**']
+permissions:
+  contents: read
+jobs:
+  day01:
+    name: Day 01 assignment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s assignments/day-01/tests
