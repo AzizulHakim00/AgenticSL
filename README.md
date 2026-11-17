@@ -34,9 +34,14 @@ Open the printed loopback URL, normally `http://127.0.0.1:4173`. The local adapt
 
 ```sh
 npm run build
+node scripts/verify-build.mjs
 ```
 
 The build produces `dist/server/index.js` and `dist/.openai/hosting.json`. The checked-in hosting manifest identifies the existing private Site and its DB binding. Use the supported Sites source/package/deploy workflow; publishing applies the schema-only SQL migration in `drizzle/` before the Worker runs. Do not run request-time schema creation or expose the local identity adapter in production.
+
+Each successful GitHub Actions run also produces an `agenticsl-release-<commit>` artifact containing the compiled Worker archive, schema and exact source revision. Download it from the completed run's Artifacts section. It contains no learning records or credentials and is retained for 30 days. A verified artifact is ready for deployment; it does not mean the private Site has been published.
+
+The compiled release check uses a temporary in-memory database to verify authenticated API behavior, a saved objective read back through MCP and the generated client script's syntax. It does not replace visual browser QA or verification of the hosted identity gateway.
 
 ## REST interface
 

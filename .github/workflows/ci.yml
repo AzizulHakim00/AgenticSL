@@ -16,3 +16,16 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: node --check dist/server/index.js
+      - run: node scripts/verify-build.mjs
+      - name: Package deployable Worker
+        run: |
+          mkdir -p release/schema
+          tar -czf release/agenticsl-worker.tar.gz -C dist .
+          cp drizzle/0000_learning.sql release/schema/
+          git rev-parse HEAD > release/SOURCE_REVISION.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agenticsl-release-${{ github.sha }}
+          path: release/
+          if-no-files-found: error
+          retention-days: 30
