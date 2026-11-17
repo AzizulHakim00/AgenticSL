@@ -3,6 +3,11 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "public",
-  "functions": {"api/index.mjs": {"maxDuration": 30}},
-  "rewrites": [{"source": "/(.*)", "destination": "/api/index?__path=$1"}]
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://agenticsl-learning-hub.onrender.com/:path*",
+      "permanent": false
+    }
+  ]
 }
