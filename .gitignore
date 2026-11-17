@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.env*
+!.env.example
+.sites-*
+*.tar.gz
+*.sqlite*
+data/
