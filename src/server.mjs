@@ -147,7 +147,7 @@ export default {
         if(request.headers.get('Origin')!==url.origin)return json({error:'Same-origin browser requests are required.'},403);
         const r=await mutate(env.DB,actor,await readJson(request));return json({...r,state:summarize(await records(env.DB))});
       }
-      if(url.pathname==='/api/state'&&request.method==='GET')return json({curriculum:safeCurriculum(),modules,state:summarize(await records(env.DB))});
+      if(url.pathname==='/api/state'&&request.method==='GET')return json({hosting:env.PLATFORM||'sites',curriculum:safeCurriculum(),modules,state:summarize(await records(env.DB))});
       if(request.method==='GET'&&/^\/api\/days\/\d+$/.test(url.pathname))return json(await callTool(env.DB,actor,'get_day_details',{day:Number(url.pathname.split('/').at(-1))}));
       if(request.method==='GET'&&/^\/api\/weeks\/\d+$/.test(url.pathname))return json(await callTool(env.DB,actor,'generate_weekly_report',{week:Number(url.pathname.split('/').at(-1))}));
       if(request.method==='GET'&&url.pathname==='/api/skills')return json(await callTool(env.DB,actor,'get_skill_report',{}));
@@ -161,7 +161,7 @@ export default {
       }
       if(url.pathname==='/'&&request.method==='GET'){
         const nonce=crypto.randomUUID().replaceAll('-','');
-        return new Response(renderPage(nonce),{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Content-Security-Policy':`default-src 'self'; script-src 'nonce-${nonce}'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'self'`}});
+        return new Response(renderPage(nonce,env.PLATFORM||'sites'),{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Content-Security-Policy':`default-src 'self'; script-src 'nonce-${nonce}'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'self'`}});
       }
       return json({error:'Not found'},404);
     }catch(e){if(!(e instanceof HttpError))console.error('AgenticSL request failed');return json({error:e instanceof HttpError?e.message:'Could not read or save your learning records. Please retry.'},e instanceof HttpError?e.status:500);}

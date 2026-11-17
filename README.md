@@ -2,6 +2,8 @@
 
 A private, evidence-based 60-day Agentic AI learning hub for Azizul Hakim Omor.
 
+**Vercel deployment:** follow [VERCEL_SETUP.md](VERCEL_SETUP.md). The Vercel adapter uses Supabase Auth and PostgreSQL. It does not use the ChatGPT Sites sign-in route or D1 binding. Until Supabase and the owner account are configured, the deployment shows a setup page and keeps the learning API locked.
+
 ## Implemented
 
 - Eight modules, 60 daily lessons, 180 objectives and 120 server-graded quiz questions.
@@ -17,7 +19,7 @@ No learning progress, assignment approvals or scores are seeded. A completed day
 
 ## Architecture
 
-The app uses a dependency-free ES module Worker with an embedded HTML/CSS/JavaScript interface and Cloudflare D1. Hosted identity and private access are supplied by ChatGPT Sites. This keeps the app and its MCP tools on one host without separate Next.js, FastAPI, PostgreSQL and OAuth services. The local development adapter uses Node's SQLite implementation.
+The shared application is a dependency-free ES module with an embedded HTML/CSS/JavaScript interface. It has two hosting adapters: a Worker with ChatGPT Sites identity and Cloudflare D1, and Vercel Node functions with Supabase Auth and PostgreSQL. The Vercel entrypoint validates provider-issued sessions and enforces the configured owner account. The local development adapter uses Node's SQLite implementation.
 
 The repository contains application source only. Private notes, evidence and learning records are excluded from Git and remain in the database.
 
@@ -85,7 +87,7 @@ The stateless `POST /mcp` endpoint exposes:
 
 Discovery supports MCP 2026-07-28. The endpoint also implements initialization, notifications, ping and structured tool errors. Hosted Sites authenticates callers and checks their access before forwarding requests. Tools do not execute submitted code or call a paid AI model. `evaluate_submission` records the calling reviewer's suggested score and feedback; it cannot grant final learner approval.
 
-After successful publication, connect the plugin provisioned for the Site. Another ChatGPT account must first receive explicit access to the private workspace and then connect the same plugin where supported. Both accounts operate on the same personal learning records; they do not share conversation history. The platform gate is the access boundary: do not make this single-profile Site public, because authorized visitors can read and update the shared learning profile.
+For a published ChatGPT Site, connect its provisioned plugin. Another ChatGPT account must first receive explicit access to the private workspace and then connect the same plugin where supported. Both accounts operate on the same personal learning records; they do not share conversation history. The Sites platform gate is the access boundary: do not make that single-profile Site public, because authorized visitors can read and update the shared learning profile. For Vercel, follow the separate Supabase setup and MCP authorization requirements in [VERCEL_SETUP.md](VERCEL_SETUP.md); a Vercel deployment does not automatically provision a ChatGPT plugin.
 
 Example prompt:
 
