@@ -5,6 +5,11 @@
   "outputDirectory": "public",
   "redirects": [
     {
+      "source": "/",
+      "destination": "https://agenticsl-learning-hub.onrender.com",
+      "permanent": false
+    },
+    {
       "source": "/:path*",
       "destination": "https://agenticsl-learning-hub.onrender.com/:path*",
       "permanent": false
