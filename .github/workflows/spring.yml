@@ -19,6 +19,19 @@ jobs:
           cache-dependency-path: spring-app/pom.xml
       - name: Test and package Spring Boot product
         run: mvn -B -f spring-app/pom.xml verify
+      - name: Exercise running product
+        env:
+          COOKIE_SECURE: 'false'
+        run: |
+          java -jar spring-app/target/learning-hub-1.0.0.jar > /tmp/agenticsl-smoke.log 2>&1 &
+          APP_PID=$!
+          trap 'kill "$APP_PID" || true' EXIT
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://localhost:8080/actuator/health > /dev/null; then break; fi
+            sleep 1
+          done
+          python scripts/smoke-spring.py http://localhost:8080 || { cat /tmp/agenticsl-smoke.log; exit 1; }
+          node --check spring-app/src/main/resources/static/js/learning.js
       - uses: actions/upload-artifact@v4
         with:
           name: agenticsl-spring-product

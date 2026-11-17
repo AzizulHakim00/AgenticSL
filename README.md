@@ -1,107 +1,97 @@
-# AgenticSL
+# AgenticSL — Agentic AI Learning Hub
 
-A private, evidence-based 60-day Agentic AI learning hub for Azizul Hakim Omor.
+A Spring Boot learning product with a 60-day curriculum, daily implementation tasks, short quizzes, private learner records and an admin-reviewed GitHub submission workflow.
 
-**Vercel deployment:** follow [VERCEL_SETUP.md](VERCEL_SETUP.md). The Vercel adapter uses Supabase Auth and PostgreSQL. It does not use the ChatGPT Sites sign-in route or D1 binding. Until Supabase and the owner account are configured, the deployment shows a setup page and keeps the learning API locked.
+## Product
 
-## Implemented
+- **Home `/`**: course overview, all eight modules and access to the interactive demo.
+- **Demo `/demo`**: all lessons, objectives, quizzes, study logging, assignment forms, skills and exports in an isolated, temporary session. Demo progress never becomes a real learner record.
+- **Workspace `/dashboard`**: GitHub-authenticated private learning dashboard, backed by MongoDB.
+- **Admin `/admin`**: participation requests, learner-branch provisioning or verification, submitted evidence, suggested scores and final approvals.
+- **Curriculum**: 60 specific lessons, 180 objectives and 120 server-graded questions. All progress starts empty.
+- **Evidence**: versioned explanations, code/output, PR URL and submitted commit. New submissions invalidate old review eligibility.
+- **Reports**: study time, quiz results, module completion, self-assessed skills, weekly reflections, private JSON and CSV exports.
 
-- Eight modules, 60 daily lessons, 180 objectives and 120 server-graded quiz questions.
-- Daily coding assignments with versioned explanations, HTTPS evidence links and pasted code/output.
-- Quiz attempt history, study sessions, understanding ratings and weekly reflections.
-- Dashboard, module completion, study time, activity streak in Asia/Dhaka and concepts to revisit.
-- Skills matrix with starting, current and target self-assessments, separate from reviewed evidence.
-- Suggested assignment scores and feedback, followed by the learner's explicit final approval.
-- Light/dark themes, responsive navigation, CSV progress export and full JSON record export.
-- Eight authenticated MCP tools and a REST API over the same durable database.
+## Requested stack
 
-No learning progress, assignment approvals or scores are seeded. A completed day requires all three objectives, a quiz score of at least 70%, a review score of at least 70 and final learner approval of that review. With two questions, a passing quiz currently requires both answers correct. New submissions and reviews invalidate earlier approvals. This is a learning aid, not a proficiency certification.
-
-## Architecture
-
-The shared application is a dependency-free ES module with an embedded HTML/CSS/JavaScript interface. It has two hosting adapters: a Worker with ChatGPT Sites identity and Cloudflare D1, and Vercel Node functions with Supabase Auth and PostgreSQL. The Vercel entrypoint validates provider-issued sessions and enforces the configured owner account. The local development adapter uses Node's SQLite implementation.
-
-The repository contains application source only. Private notes, evidence and learning records are excluded from Git and remain in the database.
-
-## Local development
-
-Requires Node.js 22.13 or newer (tested with Node 24).
-
-```sh
-npm test
-npm run dev
-```
-
-Open the printed loopback URL, normally `http://127.0.0.1:4173`. The local adapter injects a development identity and binds only to loopback. It is **not** an internet-facing production server. It creates `data/learning.sqlite`, which is ignored by Git. Local and hosted records are separate.
-
-```sh
-npm run build
-node scripts/verify-build.mjs
-```
-
-The build produces `dist/server/index.js` and `dist/.openai/hosting.json`. The checked-in hosting manifest identifies the existing private Site and its DB binding. Use the supported Sites source/package/deploy workflow; publishing applies the schema-only SQL migration in `drizzle/` before the Worker runs. Do not run request-time schema creation or expose the local identity adapter in production.
-
-Each successful GitHub Actions run also produces an `agenticsl-release-<commit>` artifact containing the compiled Worker archive, schema and exact source revision. Download it from the completed run's Artifacts section. It contains no learning records or credentials and is retained for 30 days. A verified artifact is ready for deployment; it does not mean the private Site has been published.
-
-The compiled release check uses a temporary in-memory database to verify authenticated API behavior, a saved objective read back through MCP and the generated client script's syntax. It does not replace visual browser QA or verification of the hosted identity gateway.
-
-## REST interface
-
-All learning routes require identity supplied by the trusted hosting boundary. Browser writes additionally require a matching Origin header. Do not accept arbitrary internet-supplied identity headers in a standalone deployment.
-
-| Method and route | Purpose |
+| Component | Implementation |
 | --- | --- |
-| `GET /api/health` | Basic service health; does not check storage |
-| `GET /api/state` | Curriculum, modules and shared learning state |
-| `GET /api/days/1` | Day details, assignment evidence and attempt history |
-| `GET /api/weeks/1` | Evidence, time and reflections for a week |
-| `GET /api/skills` | Self-reported skills and evidence-based progress indicators |
-| `POST /api/action` | Validated task, submission, quiz, study, review, approval, skill or reflection action |
-| `GET /api/export?format=csv` | Spreadsheet-friendly progress snapshot |
-| `GET /api/export` | Private full JSON record export |
+| Application | Java 21, Spring Boot 3.5, Spring MVC |
+| Interface | Thymeleaf, HTML, CSS and JavaScript |
+| Security | Spring Security, CSRF protection and server-side authorization |
+| Login | GitHub OAuth authorization-code login |
+| Persistence | MongoDB Atlas; dedicated application database and least-privilege user |
+| Code submissions | GitHub forks and PRs to `learners/<username>` |
+| Evaluation | Deterministic quizzes, optional assignment CI and manual admin review |
+| Container | Multistage Docker build, non-root runtime |
+| Hosting | Render Docker web service, explicitly configured `free` plan |
 
-Example action bodies:
+The earlier Node/Vercel/Supabase prototype remains in the repository for history and curriculum generation. It is not the Spring product's runtime. The root Dockerfile builds only `spring-app/`; no Node service or Supabase project is needed by the Spring deployment.
 
-```json
-{"type":"task","day":1,"index":0,"checked":true,"requestId":"unique-request-0001"}
+## Learner and admin workflow
+
+1. Sign in with GitHub and request participation.
+2. Admin approves after creating or verifying `learners/<github-username>` in the official repository. The optional repository token automates creation; without it, the admin creates the branch in GitHub and retries approval.
+3. Learners fork the public repository, clone their fork and make an assignment branch.
+4. Open a PR from that fork to the assigned learner branch, never to `main`.
+5. Submit its URL, implementation explanation and evidence in the daily workspace.
+6. The server reads GitHub to verify PR author ID, official repository and target branch, and saves the submitted head commit.
+7. Admin reviews code and tests, merges the PR in GitHub, and records score, feedback and final approval in the admin panel.
+8. Final approval rechecks GitHub. It requires a merged PR whose head commit matches the submitted commit and a review score of at least 70. All three objectives and a passing quiz are also required before the day becomes complete.
+
+The repository owner/admin may submit their own study work from a branch in the official repository because GitHub does not permit a personal account to fork its own repository into the same account. Other learners must use forks. GitHub usernames are display and branch values; immutable numeric GitHub IDs determine identity and the admin role.
+
+Main-branch push restrictions are **GitHub repository administration settings**, separate from app authorization. In a public GitHub organization repository, configure protection/rulesets for `main` and learner branches so only the designated admin can push or merge upstream. This code does not claim those external rules are installed. The repository can be moved into an organization later by updating `GITHUB_REPOSITORY`; no organization is created automatically.
+
+## Run the product
+
+```sh
+mvn -f spring-app/pom.xml verify
+COOKIE_SECURE=false mvn -f spring-app/pom.xml spring-boot:run
 ```
 
-```json
-{"type":"submission","day":1,"answer":"Built GET and POST task routes","evidence":"POST /tasks returned 201; malformed input returned 400","evidenceUrl":"https://github.com/owner/repo/commit/COMMIT"}
+Open `http://localhost:8080` and choose **Explore the demo**. Java 21 and Maven 3.6.3 or later are required. In PowerShell set `$env:COOKIE_SECURE='false'` before the Maven command. This setting is only for local HTTP; production cookies remain Secure and HttpOnly.
+
+```sh
+docker build -t agenticsl .
+docker run --rm -p 8080:8080 -e COOKIE_SECURE=false agenticsl
 ```
 
-Supply one stable `requestId` when retrying a logical action. Matching requests are deduplicated; conflicting reuse is rejected. Inputs are parameterized and validated. Quiz answer keys are omitted from lesson responses and returned with feedback after an attempt.
+## Enable live login and persistence
 
-## ChatGPT connection
+Configure secrets only in Render's Environment settings, never in Git:
 
-The stateless `POST /mcp` endpoint exposes:
+| Variable | Purpose |
+| --- | --- |
+| `PUBLIC_BASE_URL` | Exact HTTPS Render URL, with no trailing slash |
+| `GITHUB_CLIENT_ID` | GitHub OAuth App client ID |
+| `GITHUB_CLIENT_SECRET` | Matching OAuth App secret |
+| `MONGODB_URI` | Connection URI with a dedicated app user's credentials |
+| `MONGODB_DATABASE` | `agenticsl` by default |
+| `ADMIN_GITHUB_ID` | Numeric ID of the admin; defaults to repository owner's current known ID |
+| `GITHUB_REPOSITORY` | Official `owner/repo`; defaults to `AzizulHakim00/AgenticSL` |
+| `GITHUB_ADMIN_TOKEN` | Optional fine-grained token restricted to the official repo, contents read/write for branch creation |
 
-1. `get_learning_progress`
-2. `get_day_details`
-3. `update_task_status`
-4. `submit_assignment`
-5. `submit_quiz`
-6. `evaluate_submission`
-7. `get_skill_report`
-8. `generate_weekly_report`
+Register a GitHub OAuth App with Homepage URL equal to `PUBLIC_BASE_URL` and callback `PUBLIC_BASE_URL/login/oauth2/code/github`. Requesting the GitHub password is never part of this app. The registered owner must create/configure the OAuth App; connecting GitHub to this chat does not supply application OAuth credentials.
 
-Discovery supports MCP 2026-07-28. The endpoint also implements initialization, notifications, ping and structured tool errors. Hosted Sites authenticates callers and checks their access before forwarding requests. Tools do not execute submitted code or call a paid AI model. `evaluate_submission` records the calling reviewer's suggested score and feedback; it cannot grant final learner approval.
+Use an Atlas user with `readWrite` only on `agenticsl`, restricted to the intended cluster. Live records and enrolments are stored in MongoDB; local container disk is not used for permanent learning history. Atlas network access must permit the Render service's outbound ranges.
 
-For a published ChatGPT Site, connect its provisioned plugin. Another ChatGPT account must first receive explicit access to the private workspace and then connect the same plugin where supported. Both accounts operate on the same personal learning records; they do not share conversation history. The Sites platform gate is the access boundary: do not make that single-profile Site public, because authorized visitors can read and update the shared learning profile. For Vercel, follow the separate Supabase setup and MCP authorization requirements in [VERCEL_SETUP.md](VERCEL_SETUP.md); a Vercel deployment does not automatically provision a ChatGPT plugin.
+`render.yaml` records the free Docker service configuration. The service can also be created through the connected Render integration; in that case Render settings are the operational source of truth and this file is a reproducible reference. `/actuator/health` verifies that the application is serving; real login, database read/write and GitHub operations must be verified separately before calling the live private workflow complete.
 
-Example prompt:
+## Deterministic assignment tests
 
-> Read my Day 1 assignment and rubric. Inspect the latest evidence, explain what it demonstrates and what remains unverified, then record a suggested score and feedback. I will make the final approval in the website.
+Day 1 includes a WSGI API starter and four executable tests in `assignments/day-01/`. The starter intentionally fails until the learner implements it. The **Assignment evidence** workflow runs only on relevant PRs targeting learner branches, with read-only repository permissions, no persisted checkout credentials and a five-minute timeout. The application never executes submitted code.
 
-## Limits and operational status
+The remaining daily assignments have requirements and review rubrics; dedicated coding test suites are not yet supplied for all 60 days. Passing a PR check is supporting evidence, not automatic approval: the admin must inspect changes to tests/workflows and review the implementation before merging and approving it.
 
-- Public progress sharing, autonomous paid AI grading, file uploads and Excel import are not implemented. Use evidence links/pasted output, manual ChatGPT review, CSV and JSON exports.
-- The existing Excel tracker is a separate starting tool; it is not automatically synchronized with the app.
-- Exports are downloadable snapshots. There is no tested automatic restore feature; protect the hosted database and keep exports privately.
-- Self-reported study time and skill ratings are labelled accordingly. Reviews assess supplied evidence; code is not independently executed.
-- The local integration tests cover curriculum structure, completion rules, approval invalidation, validation, idempotency, authentication handling, MCP, skills and exports. Hosting-level identity/access and browser behavior require verification after deployment.
-- Publication is not established by a build or a repository commit. See the deployment result in the task's final response for the observed hosting status.
+## Verification and limits
 
-## Editing the curriculum
+The **Spring product** CI builds the jar and tests the curriculum, rendered pages, demo session isolation, server-side quiz grading, CSRF rejection, private/API boundaries, enrolment approval, PR validation and approval rejection for changed/unmerged commits. It then starts the actual jar and runs an HTTP save/reload smoke check. Tests use no production learner data.
 
-Edit module ranges and daily exercise contracts in `src/curriculum.mjs`, and day-specific teaching notes in `src/notes.mjs`. Keep 60 ordered days, three objectives per day and two valid questions per day, or update the corresponding UI and validation rules deliberately. Use the linked primary documentation and pin dependency versions when doing framework exercises.
+- Demo sessions are temporary, isolated and capped; container restarts can reset them. Live MongoDB records persist independently.
+- Render's free workspace hours are shared with other free services, and free services can sleep. Free does not mean unlimited or always on.
+- No paid OpenAI API or automated GPT grading is used. Export evidence for manual ChatGPT review, then let the admin record the evaluation.
+- Direct ChatGPT MCP synchronization, automatic webhook merging, public learner profiles and automatic testing for all 60 coding assignments are not implemented.
+- No live login or third-party database can be claimed verified until its credentials are configured and its actual workflow is exercised.
+
+Curriculum source lives in `src/curriculum.mjs`, `src/notes.mjs` and `src/practice-questions.mjs`. `node scripts/generate-spring-assets.mjs` regenerates the committed Java resources; the deployed Java app itself requires no Node process.

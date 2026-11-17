@@ -13,6 +13,7 @@ script=script.replace("  let data=null,view=", "  const api=location.pathname===
   .replaceAll('href="/api/export','href="${api}/export')
   .replaceAll("{'Content-Type':'application/json'}","{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name=\"_csrf\"]').content}")
   .replace('GitHub commit, notebook or demo URL (optional)','Your pull request to the approved learner branch')
+  .replace('and your final approval of the latest reviewed assignment with a score of 70 or more.','and admin approval of the latest assignment after a passing review and a merged pull request.')
   .replace('id="evidenceUrl" type="url"','id="evidenceUrl" required type="url"')
   .replace("function connections(){if(data.hosting", "function connections(){if(data.hosting==='spring')return springConnections();if(data.hosting");
 const start=script.indexOf('  function review(d,p)'),end=script.indexOf('  function assessments(',start);

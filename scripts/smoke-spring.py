@@ -1,0 +1,31 @@
+"""Exercise a running Spring product using isolated demo sessions, no real records."""
+import http.cookiejar
+import json
+import re
+import sys
+import urllib.request
+
+base = sys.argv[1].rstrip('/')
+client = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+
+def get(path):
+    with client.open(base + path, timeout=30) as response:
+        return response.read().decode()
+
+assert 'Your next skill' in get('/')
+page = get('/demo')
+token = re.search(r'<meta name="_csrf" content="([^"]+)"', page).group(1)
+state = json.loads(get('/api/demo/state'))
+assert len(state['curriculum']) == 60 and state['state']['completed'] == 0
+data = json.dumps({'type': 'task', 'day': 1, 'index': 0, 'checked': True,
+                   'requestId': 'http-smoke-objective-0001'}).encode()
+request = urllib.request.Request(base + '/api/demo/action', data=data,
+    headers={'Content-Type': 'application/json', 'X-CSRF-TOKEN': token}, method='POST')
+with client.open(request, timeout=30) as response:
+    assert json.load(response)['state']['days'][0]['tasks'][0] is True
+assert json.loads(get('/api/demo/state'))['state']['days'][0]['tasks'][0] is True
+other = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+with other.open(base + '/api/demo/state', timeout=30) as response:
+    assert json.load(response)['state']['days'][0]['tasks'][0] is False
+assert 'Admin console' not in get('/demo')
+print('Running product verified: landing, rendered demo, CSRF-protected save, reload and session isolation.')

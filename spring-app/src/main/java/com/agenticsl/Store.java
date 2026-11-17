@@ -19,6 +19,8 @@ public class Store {
   private final Map<String,Instant> touched=new ConcurrentHashMap<>();
   public Store(Settings settings){mongo=settings.storageReady()?new MongoTemplate(MongoClients.create(settings.mongoUri),settings.mongoDatabase):null;}
   private void live(){if(mongo==null)throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Persistent storage is not connected. Use the isolated demo meanwhile.");}
+  public boolean databaseConfigured(){return mongo!=null;}
+  public void ping(){live();mongo.executeCommand(new Document("ping",1));}
   public List<Document> records(String owner){
     if(owner.startsWith("demo:")){touched.put(owner,Instant.now());if(touched.size()>500){var cutoff=Instant.now().minusSeconds(7200);touched.forEach((k,v)->{if(v.isBefore(cutoff)){demos.remove(k);touched.remove(k);}});}return new ArrayList<>(demos.getOrDefault(owner,List.of()));}
     live();return mongo.find(Query.query(Criteria.where("ownerId").is(owner)).with(Sort.by("sequence")),Document.class,"learning_records");
