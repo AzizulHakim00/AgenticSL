@@ -19,6 +19,11 @@ jobs:
           cache-dependency-path: spring-app/pom.xml
       - name: Test and package Spring Boot product
         run: mvn -B -f spring-app/pom.xml verify
+      - name: Verify published coding examples
+        run: |
+          node --check spring-app/src/main/resources/static/js/learning-lab.js
+          node --check spring-app/src/main/resources/static/js/tutorials.js
+          python scripts/verify-tutorials.py
       - name: Exercise running product
         env:
           COOKIE_SECURE: 'false'

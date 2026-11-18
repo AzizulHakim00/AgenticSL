@@ -1,12 +1,15 @@
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {tutorials} from '../src/tutorials.mjs';
 import {curriculum,modules} from '../src/curriculum.mjs';
 import {renderPage} from '../src/ui.mjs';
 const base=new URL('../spring-app/src/main/resources/',import.meta.url);
-for(const name of ['templates','static/css','static/js'])await mkdir(new URL(name+'/',base),{recursive:true});
-await writeFile(new URL('curriculum.json',base),JSON.stringify({curriculum,modules},null,2));
+const files={'curriculum.json':JSON.stringify({curriculum,modules},null,2)};
 let html=renderPage('unused','spring');
 const css=html.match(/<style>([\s\S]*?)<\/style>/)[1];
 let script=html.match(/<script nonce="unused">([\s\S]*?)<\/script>/)[1];
+if(!script.includes('function lesson(d,p){return') || !script.includes('+stats()+'))throw new Error('Dashboard integration points changed');
+script=script.replace('function lesson(d,p){return', 'function lesson(d,p){return window.AgenticLessons.render(d)+')
+  .replace('+stats()+', '+window.AgenticLessons.showcase(s.currentDay)+stats()+');
 script=script.replace("  let data=null,view=", "  const api=location.pathname==='/demo'?'/api/demo':'/api';\n  let data=null,view=")
   .replace("fetch('/api/state')","fetch(api+'/state')")
   .replace("fetch('/api/action',","fetch(api+'/action',")
@@ -27,14 +30,23 @@ script=script.replace('    bindForms();',`    document.querySelectorAll('a[href^
       document.querySelectorAll('button[type=submit], [data-task]').forEach(b=>b.disabled=true);
       $('#request-access')?.addEventListener('click',async()=>{try{const r=await fetch('/api/enrollment',{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="_csrf"]').content}});if(!r.ok)throw Error('Participation request failed.');await load();render();}catch(e){toast(e.message,true);}});
     }
+    window.AgenticLessons.mount();
     bindForms();`);
 html=html.replace('<html lang="en">','<html lang="en" xmlns:th="http://www.thymeleaf.org">')
   .replace('<head>','<head><meta name="_csrf" th:content="${_csrf.token}">')
-  .replace(/<style>[\s\S]*?<\/style>/,'<link rel="stylesheet" href="/css/app.css">')
-  .replace(/<script nonce="unused">[\s\S]*?<\/script>/,'<script src="/js/learning.js" defer></script>')
+  .replace(/<style>[\s\S]*?<\/style>/,'<link rel="stylesheet" href="/css/app.css"><link rel="stylesheet" href="/css/learning-lab.css">')
+  .replace(/<script nonce="unused">[\s\S]*?<\/script>/,'<script src="/js/tutorials.js" defer></script><script src="/js/learning-lab.js" defer></script><script src="/js/learning.js" defer></script>')
   .replace('<span class="private">Private workspace</span>','<span class="private" th:text="${demo ? \'Demo sandbox\' : \'Private workspace\'}">Workspace</span><a href="/" class="text-link">Home</a><form th:if="${!demo}" th:action="@{/logout}" method="post"><button class="btn small">Sign out</button></form>')
   .replace('<div class="content" id="page">','<div class="callout" style="margin:15px 20px" th:if="${demo}"><strong>Demo sandbox</strong> · Explore lessons, quizzes and submissions. This session is isolated and temporary. It does not enrol you or create real GitHub approvals.</div><div class="content" id="page">');
-await writeFile(new URL('static/css/app.css',base),css);
-await writeFile(new URL('static/js/learning.js',base),script);
-await writeFile(new URL('templates/dashboard.html',base),html);
-console.log('Generated Java curriculum and dashboard resources. No learning records included.');
+files['static/css/app.css']=css;
+files['static/js/learning.js']=script;
+files['templates/dashboard.html']=html;
+files['static/css/learning-lab.css']=await readFile(new URL('../src/learning-lab.css',import.meta.url),'utf8');
+files['static/js/learning-lab.js']=await readFile(new URL('../src/learning-lab.js',import.meta.url),'utf8');
+files['static/js/tutorials.js']='window.AgenticTutorials='+JSON.stringify(tutorials)+';\nwindow.AgenticLessonMeta='+JSON.stringify(curriculum.map(({day,title,outcome})=>({day,title,outcome})))+';\n';
+if(process.argv.includes('--emit-json'))console.log(JSON.stringify(files));
+else{
+  for(const name of ['templates','static/css','static/js'])await mkdir(new URL(name+'/',base),{recursive:true});
+  for(const [path,content]of Object.entries(files))await writeFile(new URL(path,base),content);
+  console.log('Generated Java curriculum and dashboard resources. No learning records included.');
+}

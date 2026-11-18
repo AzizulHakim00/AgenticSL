@@ -95,3 +95,9 @@ The **Spring product** CI builds the jar and tests the curriculum, rendered page
 - No live login or third-party database can be claimed verified until its credentials are configured and its actual workflow is exercised.
 
 Curriculum source lives in `src/curriculum.mjs`, `src/notes.mjs` and `src/practice-questions.mjs`. `node scripts/generate-spring-assets.mjs` regenerates the committed Java resources; the deployed Java app itself requires no Node process.
+
+## Interactive coding lessons
+
+All 60 days include a syntax-highlighted, copyable Python example, checked expected output, a three-stage visual walkthrough and a failure exercise. Every example runs with Python 3.11+ and the standard library; model, framework and MCP protocol illustrations are explicitly local patterns, not live integrations. Run `python scripts/verify-tutorials.py` to execute every example and compare its actual output with the displayed result.
+
+Each daily workspace also has an editable HTML/CSS playground with a real rendered preview. A capability-free iframe sandbox and restrictive preview CSP disable scripts, network requests, forms and navigation privileges. Python examples run locally, never on the learning server. Preview edits are temporary and separate from assignment evidence. Reading text defaults to 18px, with 16–22px controls saved in the browser, and responsive layouts for narrow screens.
