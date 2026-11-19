@@ -18,6 +18,8 @@ assert '/css/learning-lab.css' in page and '/js/tutorials.js' in page
 assert 'window.AgenticTutorials=' in get('/js/tutorials.js')
 assert 'Your editable website preview' in get('/js/learning-lab.js')
 assert 'font-size:18px' in get('/css/learning-lab.css')
+assert 'data-text-size' not in get('/js/learning-lab.js')
+assert 'reading-controls' not in get('/js/learning-lab.js')
 token = re.search(r'<meta name="_csrf" content="([^"]+)"', page).group(1)
 state = json.loads(get('/api/demo/state'))
 assert len(state['curriculum']) == 60 and state['state']['completed'] == 0

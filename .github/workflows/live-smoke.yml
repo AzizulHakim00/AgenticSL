@@ -16,7 +16,8 @@ jobs:
       - name: Verify deployed product without private credentials
         run: |
           for attempt in $(seq 1 60); do
-            if curl --max-time 10 -fsS https://agenticsl-learning-hub.onrender.com/js/learning-lab.js | grep -q 'Your editable website preview'; then break; fi
+            if curl --max-time 10 -fsS https://agenticsl-learning-hub.onrender.com/js/learning-lab.js | grep -q 'Your editable website preview' && ! curl --max-time 10 -fsS https://agenticsl-learning-hub.onrender.com/js/learning-lab.js | grep -q 'data-text-size'; then break; fi
             sleep 5
           done
           python scripts/smoke-spring.py https://agenticsl-learning-hub.onrender.com
+

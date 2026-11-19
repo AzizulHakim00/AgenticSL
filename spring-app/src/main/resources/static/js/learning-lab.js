@@ -64,20 +64,7 @@
     if (event.target.closest('[data-preview-run]')) showPreview();
     const previewReset = event.target.closest('[data-preview-reset]');
     if (previewReset) { const day = Number(previewReset.dataset.day), t = tutorial(day); const d = window.AgenticLessonMeta[day - 1]; document.querySelector('#html-source').value = previewSource(d, t); showPreview(); }
-    const size = event.target.closest('[data-text-size]');
-    if (size) {
-      const current = Number(document.documentElement.dataset.readingSize || 18);
-      const value = Math.max(16, Math.min(22, current + Number(size.dataset.textSize)));
-      document.documentElement.dataset.readingSize = value; document.documentElement.style.fontSize = value + 'px';
-      document.querySelector('#reading-size').textContent = value + 'px';
-      try { localStorage.setItem('agenticsl-reading-size', String(value)); } catch {}
-    }
   });
-  let size = 18;
-  try { const stored = Number(localStorage.getItem('agenticsl-reading-size')); if (stored >= 16 && stored <= 22) size = stored; } catch {}
-  document.documentElement.dataset.readingSize = size; document.documentElement.style.fontSize = size + 'px';
-  const controls = document.createElement('div'); controls.className = 'reading-controls'; controls.setAttribute('role', 'group'); controls.setAttribute('aria-label', 'Text size');
-  controls.innerHTML = '<button data-text-size="-1" aria-label="Decrease text size">A−</button><span id="reading-size">' + size + 'px</span><button data-text-size="1" aria-label="Increase text size">A+</button>';
-  document.querySelector('.top-actions')?.prepend(controls);
+  document.documentElement.style.fontSize = '18px';
   window.AgenticLessons = { render, mount, showcase };
 })();
