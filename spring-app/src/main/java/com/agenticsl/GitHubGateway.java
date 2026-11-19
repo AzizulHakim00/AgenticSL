@@ -63,7 +63,10 @@ public class GitHubGateway {
     }catch(Exception ex){throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Use a pull request URL in the official repository.");}
     var p=api("/pulls/"+number,"GET",null);
     if(p.path("missing").asBoolean()||!owner.equals(p.path("user").path("id").asText())||!branch.equals(p.path("base").path("ref").asText())||!settings.repository.equalsIgnoreCase(p.path("base").path("repo").path("full_name").asText()))throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The PR must be yours and target your approved learner branch in the official repository.");
-    if(!p.path("head").path("repo").path("fork").asBoolean()&&!owner.equals(settings.adminId))throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Learners submit from their personal fork.");
+    var headRepository=p.path("head").path("repo");
+    boolean personalFork=headRepository.path("fork").asBoolean()&&owner.equals(headRepository.path("owner").path("id").asText());
+    boolean officialAdminBranch=owner.equals(settings.adminId)&&settings.repository.equalsIgnoreCase(headRepository.path("full_name").asText());
+    if(!personalFork&&!officialAdminBranch)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Submit from a fork owned by your signed-in GitHub account.");
     return new Document("number",number).append("url",url).append("headSha",p.path("head").path("sha").asText()).append("merged",p.path("merged").asBoolean()).append("state",p.path("state").asText()).append("base",branch);
   }
 }
