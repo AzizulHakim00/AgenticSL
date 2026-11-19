@@ -6,6 +6,11 @@ import org.junit.jupiter.api.*;
 import org.bson.Document;
 import com.fasterxml.jackson.databind.*;
 import java.util.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.web.server.ResponseStatusException;
 
 class WorkflowTest {
@@ -30,8 +35,29 @@ class WorkflowTest {
     assertThrows(ResponseStatusException.class,()->learning.review("42",1,"submission-1",90,"Reviewed evidence",true,admin));verify(store,never()).append(anyString(),any());
   }
   @Test void prValidationRejectsWrongAuthorBaseAndNonGithubUrl(){
-    var gateway=new GitHubGateway(settings,mapper){@Override protected JsonNode api(String path,String method,Object body){return mapper.createObjectNode();}};
+    var gateway=new GitHubGateway(settings,mapper,Optional.empty()){@Override protected JsonNode api(String path,String method,Object body){return mapper.createObjectNode();}};
     assertThrows(ResponseStatusException.class,()->gateway.pull("https://example.test/pull/1","42","learners/learner"));
     assertThrows(ResponseStatusException.class,()->gateway.pull("https://github.com/AzizulHakim00/AgenticSL/pull/1","42","learners/learner"));
+  }
+  @Test void signedInGitHubTokenIsUsedOnlyForReads(){
+    settings.githubToken="";
+    var clients=mock(OAuth2AuthorizedClientService.class);
+    var login=mock(OAuth2AuthenticationToken.class);
+    var authorized=mock(OAuth2AuthorizedClient.class);
+    var accessToken=new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,"test-token",null,null);
+    when(login.isAuthenticated()).thenReturn(true);
+    when(login.getAuthorizedClientRegistrationId()).thenReturn("github");
+    when(login.getName()).thenReturn("42");
+    when(clients.loadAuthorizedClient("github","42")).thenReturn(authorized);
+    when(authorized.getAccessToken()).thenReturn(accessToken);
+    var gateway=new GitHubGateway(settings,mapper,Optional.of(clients));
+    try{
+      SecurityContextHolder.getContext().setAuthentication(login);
+      assertEquals("test-token",gateway.authorizationToken("GET"));
+      assertEquals("",gateway.authorizationToken("POST"));
+      verify(clients,times(1)).loadAuthorizedClient("github","42");
+    }finally{
+      SecurityContextHolder.clearContext();
+    }
   }
 }

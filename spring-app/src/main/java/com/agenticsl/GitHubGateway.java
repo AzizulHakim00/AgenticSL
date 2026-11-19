@@ -8,18 +8,37 @@ import com.fasterxml.jackson.databind.*;
 import org.bson.Document;
 import org.springframework.stereotype.Component;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class GitHubGateway {
   private final Settings settings;private final ObjectMapper mapper;
+  private final Optional<OAuth2AuthorizedClientService> authorizedClients;
   private final HttpClient client=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).followRedirects(HttpClient.Redirect.NEVER).build();
-  public GitHubGateway(Settings s,ObjectMapper m){settings=s;mapper=m;}
+  public GitHubGateway(Settings settings,ObjectMapper mapper,Optional<OAuth2AuthorizedClientService> authorizedClients){
+    this.settings=settings;
+    this.mapper=mapper;
+    this.authorizedClients=authorizedClients;
+  }
+  String authorizationToken(String method){
+    if(!settings.githubToken.isBlank())return settings.githubToken;
+    // Use the signed-in account for public reads. Branch creation still requires the configured repository token.
+    if(!"GET".equals(method)||authorizedClients.isEmpty())return "";
+    var authentication=SecurityContextHolder.getContext().getAuthentication();
+    if(!(authentication instanceof OAuth2AuthenticationToken login)||!login.isAuthenticated()||!"github".equals(login.getAuthorizedClientRegistrationId()))return "";
+    OAuth2AuthorizedClient authorized=authorizedClients.get().loadAuthorizedClient("github",login.getName());
+    return authorized==null?"":authorized.getAccessToken().getTokenValue();
+  }
   protected JsonNode api(String path,String method,Object body){
     if(!settings.repository.matches("[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+"))throw new IllegalStateException("Invalid official repository");
     try{
       var b=HttpRequest.newBuilder(URI.create("https://api.github.com/repos/"+settings.repository+path)).timeout(Duration.ofSeconds(15)).header("Accept","application/vnd.github+json").header("X-GitHub-Api-Version","2022-11-28").header("User-Agent","AgenticSL");
-      if(!settings.githubToken.isBlank())b.header("Authorization","Bearer "+settings.githubToken);
+      var token=authorizationToken(method);
+      if(!token.isBlank())b.header("Authorization","Bearer "+token);
       b.method(method,body==null?HttpRequest.BodyPublishers.noBody():HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(body)));
       var r=client.send(b.build(),HttpResponse.BodyHandlers.ofString());
       if(r.statusCode()==404)return mapper.createObjectNode().put("missing",true);
