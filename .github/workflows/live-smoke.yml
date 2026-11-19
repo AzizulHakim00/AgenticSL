@@ -1,8 +1,17 @@
 name: Live Render product
 on:
+  workflow_dispatch:
   push:
     branches: [main]
-    paths: ['.github/workflows/live-smoke.yml', 'release/verify-render.json', 'src/learning-lab.*', 'src/tutorials.mjs']
+    paths:
+      - '.github/workflows/live-smoke.yml'
+      - 'scripts/smoke-spring.py'
+      - 'spring-app/**'
+      - 'Dockerfile'
+      - 'render.yaml'
+      - 'release/verify-render.json'
+      - 'src/learning-lab.*'
+      - 'src/tutorials.mjs'
 permissions:
   contents: read
 jobs:
