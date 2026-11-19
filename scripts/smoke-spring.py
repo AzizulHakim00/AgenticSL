@@ -3,6 +3,7 @@ import http.cookiejar
 import json
 import re
 import sys
+import urllib.error
 import urllib.request
 
 base = sys.argv[1].rstrip('/')
@@ -12,6 +13,13 @@ def get(path):
     with client.open(base + path, timeout=30) as response:
         return response.read().decode()
 
+assert json.loads(get('/actuator/health'))['status'] == 'UP'
+try:
+    get('/api/state')
+except urllib.error.HTTPError as error:
+    assert error.code == 401, error.code
+else:
+    raise AssertionError('Anonymous users must not receive private learning state')
 assert 'Your next skill' in get('/')
 page = get('/demo')
 assert '/css/learning-lab.css' in page and '/js/tutorials.js' in page
