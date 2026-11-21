@@ -11,7 +11,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 @Service
 public class Learning {
-  public record Actor(String id,String login,boolean admin,boolean demo){}
+  public record Actor(String id,String login,boolean admin,boolean demo,String githubId,String githubLogin){
+    public Actor(String id,String login,boolean admin,boolean demo){this(id,login,admin,demo,id.matches("[0-9]+")?id:null,login);}
+  }
   private final Course course;private final Store store;private final GitHubGateway github;private final Settings settings;private final ObjectMapper mapper;
   public Learning(Course c,Store s,GitHubGateway g,Settings p,ObjectMapper m){course=c;store=s;github=g;settings=p;mapper=m;}
   static void need(boolean ok,String message){if(!ok)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,message);}
@@ -19,16 +21,21 @@ public class Learning {
   private static String text(JsonNode n,String name,int max){String v=n.path(name).asText("").trim();need(!v.isBlank()&&v.length()<=max,name+" is required (maximum "+max+" characters)");return v;}
   public Document membership(Actor a){
     if(a.demo())return new Document("status","DEMO").append("branch","demo/session");
-    if(a.admin())return new Document("status","APPROVED").append("branch","learners/"+a.login().toLowerCase(Locale.ROOT));
-    var e=store.enrollment(a.id());return e==null?new Document("status","NOT_REQUESTED"):e;
+    if(a.admin())return new Document("status","APPROVED").append("branch","learners/"+a.githubLogin().toLowerCase(Locale.ROOT));
+    var e=store.enrollment(a.id());
+    if(e!=null)return e;
+    return new Document("status",a.githubId()==null?"NOT_LINKED":"NOT_REQUESTED");
   }
-  public void requestAccess(Actor a){need(!a.demo(),"Demo accounts cannot enrol");var existing=store.enrollment(a.id());if(existing!=null&&List.of("PENDING","APPROVED").contains(existing.getString("status")))return;store.saveEnrollment(new Document("_id",a.id()).append("login",a.login()).append("status","PENDING").append("requestedAt",Instant.now().toString()));}
+  public void requestAccess(Actor a){need(!a.demo(),"Demo accounts cannot enrol");need(a.githubId()!=null&&!a.githubId().isBlank(),"Connect and verify your GitHub account before requesting repository access.");var existing=store.enrollment(a.id());if(existing!=null&&List.of("PENDING","APPROVED").contains(existing.getString("status")))return;store.saveEnrollment(new Document("_id",a.id()).append("login",a.githubLogin()).append("githubId",a.githubId()).append("displayName",a.login()).append("status","PENDING").append("requestedAt",Instant.now().toString()));}
   public void approve(String id){var e=store.enrollment(id);need(e!=null,"Unknown participation request");var branch=github.prepareBranch(e.getString("login"));e.put("branch",branch);e.put("status","APPROVED");e.put("approvedAt",Instant.now().toString());store.saveEnrollment(e);}
   public void reject(String id){var e=store.enrollment(id);need(e!=null,"Unknown participation request");e.put("status","REJECTED");store.saveEnrollment(e);}
   public List<Document> enrollments(){return store.enrollments();}
   public Document action(Actor a,JsonNode input){
     need(input.isObject(),"An action object is required");var type=text(input,"type",30);
-    if(!a.demo()&&!a.admin()&&!"APPROVED".equals(membership(a).getString("status")))throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Request participation and wait for admin approval before recording progress.");
+    // Daily learning, quizzes, study logs and skills are available immediately after signup.
+    // GitHub verification and admin approval gate only code-PR submissions.
+    if("submission".equals(type)&&!a.demo()&&!a.admin()&&!"APPROVED".equals(membership(a).getString("status")))
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Connect GitHub and receive admin approval before submitting a pull request.");
     int day=List.of("reflection","skill").contains(type)?0:integer(input,"day",1,60);Document p=new Document();
     switch(type){
       case "task"->{p.put("index",integer(input,"index",0,2));need(input.path("checked").isBoolean(),"checked must be boolean");p.put("checked",input.get("checked").booleanValue());}
@@ -36,7 +43,7 @@ public class Learning {
       case "skill"->{p.put("module",integer(input,"module",1,8));p.put("baseline",integer(input,"baseline",0,5));p.put("current",integer(input,"current",0,5));p.put("target",integer(input,"target",1,5));}
       case "reflection"->{p.put("week",integer(input,"week",1,9));for(String key:List.of("wins","blockers","next"))p.put(key,text(input,key,12000));}
       case "quiz"->{var answers=input.path("answers");need(answers.isArray()&&answers.size()==2,"Answer both quiz questions");int correct=0;var results=new ArrayList<Document>();for(int i=0;i<2;i++){need(answers.get(i).isIntegralNumber()&&answers.get(i).asInt()>=0&&answers.get(i).asInt()<4,"Invalid quiz choice");var q=course.day(day).get("questions").get(i);boolean ok=answers.get(i).asInt()==q.get("answer").asInt();if(ok)correct++;results.add(new Document("correct",ok).append("answer",q.get("answer").asInt()).append("explanation",q.get("explanation").asText()));}p.put("score",correct*50);p.put("answers",mapper.convertValue(answers,List.class));p.put("results",results);}
-      case "submission"->{p.put("answer",text(input,"answer",12000));p.put("evidence",text(input,"evidence",20000));var url=text(input,"evidenceUrl",2000);p.put("evidenceUrl",url);if(a.demo()){need(url.startsWith("https://github.com/"),"Use an HTTPS GitHub PR URL");p.put("pr",new Document("url",url).append("headSha","demo-only").append("merged",false).append("number",0));}else p.put("pr",github.pull(url,a.id(),membership(a).getString("branch")));}
+      case "submission"->{p.put("answer",text(input,"answer",12000));p.put("evidence",text(input,"evidence",20000));var url=text(input,"evidenceUrl",2000);p.put("evidenceUrl",url);if(a.demo()){need(url.startsWith("https://github.com/"),"Use an HTTPS GitHub PR URL");p.put("pr",new Document("url",url).append("headSha","demo-only").append("merged",false).append("number",0));}else p.put("pr",github.pull(url,a.githubId(),membership(a).getString("branch")));}
       case "review","approval"->{throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Only the admin can evaluate and approve submissions in the admin review panel.");}
       default->throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Unknown action");
     }
@@ -50,8 +57,11 @@ public class Learning {
     var all=store.records(owner);var latest=all.stream().filter(e->"submission".equals(e.getString("kind"))&&e.getInteger("day")==day).reduce((a,b)->b).orElseThrow(()->new ResponseStatusException(HttpStatus.CONFLICT,"Submission no longer exists"));
     need(submissionId.equals(latest.getString("id")),"Review only the latest submission");
     var payload=latest.get("payload",Document.class);var original=payload.get("pr",Document.class);var enrollment=store.enrollment(owner);
-    String branch=owner.equals(admin.id())?"learners/"+admin.login().toLowerCase(Locale.ROOT):enrollment==null?"":enrollment.getString("branch");
-    var current=github.pull(payload.getString("evidenceUrl"),owner,branch);
+    String branch=owner.equals(admin.id())?"learners/"+admin.githubLogin().toLowerCase(Locale.ROOT):enrollment==null?"":enrollment.getString("branch");
+    String githubId=owner.equals(admin.id())?admin.githubId():enrollment==null?null:enrollment.getString("githubId");
+    if(githubId==null&&owner.matches("[0-9]+"))githubId=owner; // legacy GitHub account
+    need(githubId!=null&&!githubId.isBlank(),"Verified GitHub identity is missing.");
+    var current=github.pull(payload.getString("evidenceUrl"),githubId,branch);
     boolean unchanged=Objects.equals(current.get("headSha"),original.get("headSha"));
     if(approved)need(score>=70&&Boolean.TRUE.equals(current.getBoolean("merged"))&&unchanged,"Final approval requires a passing score and a merged PR whose current commit matches the submitted evidence. Resubmit if its commit changed.");
     var p=new Document("submissionId",submissionId).append("score",score).append("feedback",feedback).append("approved",approved).append("reviewer",admin.login()).append("pr",current);
