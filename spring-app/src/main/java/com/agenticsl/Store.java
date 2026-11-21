@@ -7,6 +7,8 @@ import org.bson.Document;
 import org.springframework.data.mongodb.core.*;
 import org.springframework.data.mongodb.core.query.*;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.index.Index;
 import com.mongodb.client.MongoClients;
 import org.springframework.stereotype.Component;
 import org.springframework.http.HttpStatus;
@@ -17,7 +19,14 @@ public class Store {
   private final MongoTemplate mongo;
   private final Map<String,List<Document>> demos=new ConcurrentHashMap<>();
   private final Map<String,Instant> touched=new ConcurrentHashMap<>();
-  public Store(Settings settings){mongo=settings.storageReady()?new MongoTemplate(MongoClients.create(settings.mongoUri),settings.mongoDatabase):null;}
+  public Store(Settings settings){
+    mongo=settings.storageReady()?new MongoTemplate(MongoClients.create(settings.mongoUri),settings.mongoDatabase):null;
+    if(mongo!=null){
+      mongo.indexOps("accounts").ensureIndex(new Index().on("usernameKey",Direction.ASC).unique());
+      mongo.indexOps("accounts").ensureIndex(new Index().on("githubId",Direction.ASC).unique().sparse());
+      mongo.indexOps("accounts").ensureIndex(new Index().on("googleSub",Direction.ASC).unique().sparse());
+    }
+  }
   private void live(){if(mongo==null)throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Persistent storage is not connected. Use the isolated demo meanwhile.");}
   public boolean databaseConfigured(){return mongo!=null;}
   public void ping(){live();mongo.executeCommand(new Document("ping",1));}
@@ -43,6 +52,14 @@ public class Store {
   private Document duplicate(Document old,Document next){
     if(!Objects.equals(old.get("kind"),next.get("kind"))||!Objects.equals(old.get("day"),next.get("day"))||!Objects.equals(old.get("payload"),next.get("payload")))throw new ResponseStatusException(HttpStatus.CONFLICT,"Request ID was already used for different content.");return old;
   }
+  public Document account(String id){live();return mongo.findById(id,Document.class,"accounts");}
+  public Document accountBy(String field,String value){
+    live();
+    if(!Set.of("usernameKey","githubId","googleSub").contains(field))throw new IllegalArgumentException("Invalid identity field");
+    return mongo.findOne(Query.query(Criteria.where(field).is(value)),Document.class,"accounts");
+  }
+  public Document createAccount(Document account){live();return mongo.insert(account,"accounts");}
+  public void saveAccount(Document account){live();mongo.save(account,"accounts");}
   public Document enrollment(String owner){live();return mongo.findById(owner,Document.class,"enrollments");}
   public void saveEnrollment(Document doc){live();mongo.save(doc,"enrollments");}
   public List<Document> enrollments(){live();return mongo.find(new Query().with(Sort.by("requestedAt")),Document.class,"enrollments");}
