@@ -25,6 +25,14 @@ class ProductTest {
     mvc.perform(get("/demo")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("Demo sandbox")));
     mvc.perform(get("/js/learning.js")).andExpect(status().isOk());
   }
+  @Test void publicSignupAndPasswordLoginPagesAreAvailable()throws Exception{
+    mvc.perform(get("/register")).andExpect(status().isOk())
+      .andExpect(content().string(org.hamcrest.Matchers.containsString("Create free account")));
+    mvc.perform(get("/login")).andExpect(status().isOk())
+      .andExpect(content().string(org.hamcrest.Matchers.containsString("username")));
+    mvc.perform(post("/register").param("username","learner").param("email","user@example.com")
+      .param("password","a-very-long-passphrase")).andExpect(status().isForbidden());
+  }
   @Test void freshDemoIsEmptyAndSessionsAreIsolated()throws Exception{
     var first=new MockHttpSession();var second=new MockHttpSession();
     mvc.perform(post("/api/demo/action").session(first).with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{\"type\":\"task\",\"day\":1,\"index\":0,\"checked\":true,\"requestId\":\"test-request-0001\"}")).andExpect(status().isOk()).andExpect(jsonPath("$.state.days[0].tasks[0]").value(true));
