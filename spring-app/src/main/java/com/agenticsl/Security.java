@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -62,6 +63,7 @@ public class Security {
   @Bean
   SecurityFilterChain filters(HttpSecurity http,Settings s,
       ObjectProvider<ClientRegistrationRepository> clients,Accounts accounts)throws Exception {
+    http.addFilterBefore(new AuthThrottleFilter(),UsernamePasswordAuthenticationFilter.class);
     http.authorizeHttpRequests(a->a
       .requestMatchers("/","/login","/register","/demo","/css/**","/js/**","/api/demo/**",
         "/actuator/health","/error","/oauth2/**","/login/**","/github/webhook").permitAll()
