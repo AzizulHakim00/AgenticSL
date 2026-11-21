@@ -3,3 +3,14 @@
 
 /* Consistent reading size on the home, sign-in and administration pages. */
 html{font-size:18px}body{font-size:18px}.site-hero p,.panel p,.prose{font-size:18px;line-height:1.85}.simple-card p{font-size:18px}.site .module-card p,.site-metrics span,.site-footer,.hint{font-size:15px}.btn,input,textarea,select,table,.admin-form label{font-size:16px}.admin-sub{font-size:16px}
+
+/* Multi-provider authentication, compatible with the existing dark UI. */
+.auth-card{max-width:590px}
+.auth-card h1{font-size:32px;line-height:1.2;text-wrap:balance}
+.auth-card .field{margin:14px 0 7px;display:block;font-weight:600}
+.auth-card form input{width:100%;min-height:46px;font-size:16px}
+.auth-card .auth-divider{margin:22px 0 20px;text-align:center;position:relative;color:var(--muted);font-size:12px}
+.auth-card .auth-divider:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px solid var(--line)}
+.auth-card .auth-divider span{position:relative;padding:0 12px;background:var(--panel)}
+.auth-card a{text-decoration:none}
+@media(max-width:600px){.auth-card{margin:22px 14px;padding:24px}.auth-card h1{font-size:27px}}

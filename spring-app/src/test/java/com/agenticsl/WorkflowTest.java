@@ -18,10 +18,14 @@ class WorkflowTest {
   Settings settings;Store store;GitHubGateway github;Course course;Learning learning;ObjectMapper mapper;
   Learning.Actor learner=new Learning.Actor("42","learner",false,false),admin=new Learning.Actor("157488702","admin",true,false);
   @BeforeEach void setup()throws Exception{mapper=new ObjectMapper();settings=new Settings();settings.repository="AzizulHakim00/AgenticSL";settings.mongoUri="";store=mock(Store.class);github=mock(GitHubGateway.class);course=new Course(mapper);learning=new Learning(course,store,github,settings,mapper);when(store.records(anyString())).thenReturn(List.of());}
-  @Test void pendingLearnerCannotRecordProgress()throws Exception{
+  @Test void learnersCanStudyBeforeGithubApprovalButCannotSubmitPR()throws Exception{
     when(store.enrollment("42")).thenReturn(new Document("status","PENDING"));
-    assertThrows(ResponseStatusException.class,()->learning.action(learner,mapper.readTree("{\"type\":\"task\",\"day\":1,\"index\":0,\"checked\":true}")));
-    verify(store,never()).append(anyString(),any());
+    when(store.append(anyString(),any(Document.class))).thenAnswer(call->call.getArgument(1));
+    learning.action(learner,mapper.readTree("{\"type\":\"task\",\"day\":1,\"index\":0,\"checked\":true}"));
+    verify(store).append(eq("42"),any(Document.class));
+    assertThrows(ResponseStatusException.class,()->learning.action(learner,
+      mapper.readTree("{\"type\":\"submission\",\"day\":1}")));
+    verifyNoInteractions(github);
   }
   @Test void approvalCreatesOrVerifiesBranchBeforeApproving(){
     when(store.enrollment("42")).thenReturn(new Document("_id","42").append("login","learner").append("status","PENDING"));when(github.prepareBranch("learner")).thenReturn("learners/learner");

@@ -1,0 +1,19 @@
+<!doctype html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create your learning account — AgenticSL</title><link rel="stylesheet" href="/css/site.css"></head><body><main class="panel simple-card auth-card">
+<a href="/" class="site-logo">Agentic<span>SL</span></a>
+<div class="eyebrow" style="margin-top:30px">FREE LEARNING ACCOUNT</div>
+<h1>Build your skills, one day at a time.</h1>
+<p>Your login is independent of GitHub. You can start lessons and quizzes before asking the admin for code-submission access.</p>
+<div class="error" th:if="${error}" th:text="${error}"></div>
+<form th:action="@{/register}" method="post" autocomplete="on">
+  <label class="field" for="reg-user">Choose a username</label>
+  <input id="reg-user" name="username" th:value="${username}" autocomplete="username" pattern="[A-Za-z][A-Za-z0-9_-]{2,29}" minlength="3" maxlength="30" required placeholder="e.g. learner_sara">
+  <label class="field" for="reg-email">Email address</label>
+  <input id="reg-email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+  <label class="field" for="reg-pass">Password</label>
+  <input id="reg-pass" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required placeholder="At least 12 characters">
+  <p class="hint">Use a unique password. Local accounts do not yet have automated email verification or password reset.</p>
+  <button class="btn primary full" type="submit" style="margin-top:12px">Create free account</button>
+</form>
+<p class="hint" style="margin-top:20px">Already registered? <a href="/login" class="link-quiet">Sign in</a></p>
+<a href="/demo" class="btn full" style="margin-top:12px">Explore the demo</a>
+</main></body></html>

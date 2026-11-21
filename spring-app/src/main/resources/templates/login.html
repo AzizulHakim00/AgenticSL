@@ -1,1 +1,21 @@
-<!doctype html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Join your learning workspace — AgenticSL</title><link rel="stylesheet" href="/css/site.css"></head><body><main class="panel simple-card"><a class="site-logo" href="/">Agentic<span>SL</span></a><div class="eyebrow" style="margin-top:30px">YOUR PRIVATE LEARNING WORKSPACE</div><h1>Build something you understand.</h1><p>Use your GitHub account to track your learning and submit code through your personal fork. After sign-in, request course participation.</p><a th:if="${oauthReady}" class="btn primary full" href="/oauth2/authorization/github">Continue with GitHub →</a><div th:unless="${oauthReady}" class="callout">Live GitHub sign-in is not connected on this deployment yet. The full interactive demo is available below.</div><p th:if="${param.error}" class="error">GitHub sign-in was not completed. Please try again.</p><a href="/demo" class="btn full" style="margin-top:16px">Explore the isolated demo</a><p class="hint" style="margin-top:22px">Private dashboard records are separate from public code submissions. This site does not ask for your GitHub password.</p></main></body></html>
+<!doctype html><html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in — AgenticSL</title><link rel="stylesheet" href="/css/site.css"></head><body><main class="panel simple-card auth-card">
+<a class="site-logo" href="/">Agentic<span>SL</span></a>
+<div class="eyebrow" style="margin-top:30px">YOUR LEARNING ACCOUNT</div>
+<h1>Learn first. Connect GitHub later.</h1>
+<p>Use Google or your username and password to access lessons, quizzes, and saved progress. GitHub is needed only when you choose to submit code for review.</p>
+<div th:if="${param.registered}" class="callout">Account created. Sign in with your username and password.</div>
+<div th:if="${param.error}" class="error">Sign-in unsuccessful. Check your credentials or retry the provider.</div>
+<a th:if="${googleReady}" class="btn primary full" href="/oauth2/authorization/google">Continue with Google</a>
+<a th:if="${oauthReady}" class="btn full" href="/oauth2/authorization/github" style="margin-top:12px">Continue with GitHub</a>
+<div class="auth-divider"><span>or use your learning account</span></div>
+<form th:action="@{/login/password}" method="post" autocomplete="on">
+  <label class="field" for="login-username">Username</label>
+  <input id="login-username" name="username" autocomplete="username" minlength="3" maxlength="30" required>
+  <label class="field" for="login-password">Password</label>
+  <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+  <button class="btn primary full" type="submit" style="margin-top:20px">Sign in</button>
+</form>
+<p class="hint" style="margin-top:20px">Don't have an account? <a class="link-quiet" href="/register">Create a free account</a></p>
+<a href="/demo" class="btn full" style="margin-top:12px">Explore the demo without signing in</a>
+<p class="hint" style="margin-top:20px">Existing GitHub learners can continue with GitHub without losing their saved learning records. GitHub passwords are never requested.</p>
+</main></body></html>

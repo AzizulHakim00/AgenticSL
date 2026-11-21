@@ -11,9 +11,12 @@ public class Settings {
   @Value("${app.github-client-id}") public String clientId;
   @Value("${app.github-client-secret}") public String clientSecret;
   @Value("${app.github-token}") public String githubToken;
+  @Value("${app.google-client-id}") public String googleClientId;
+  @Value("${app.google-client-secret}") public String googleClientSecret;
   @Value("${app.webhook-secret}") public String webhookSecret;
   @Value("${app.mongodb-uri}") public String mongoUri;
   @Value("${app.mongodb-database}") public String mongoDatabase;
   public boolean oauthReady(){return !clientId.isBlank()&&!clientSecret.isBlank();}
+  public boolean googleReady(){return !googleClientId.isBlank()&&!googleClientSecret.isBlank();}
   public boolean storageReady(){return !mongoUri.isBlank();}
 }
