@@ -77,8 +77,9 @@ public class Accounts {
         throw new ResponseStatusException(HttpStatus.CONFLICT,"This GitHub identity is already connected to another learning account.");
       if(target.getString("githubId")!=null&&!id.equals(target.getString("githubId")))
         throw new ResponseStatusException(HttpStatus.CONFLICT,"Unlink your existing GitHub account before connecting another.");
-      if(store.account(id)!=null&&!id.equals(linkingAccountId))
-        throw new ResponseStatusException(HttpStatus.CONFLICT,"An existing GitHub learning profile needs administrator reconciliation before linking.");
+      if((store.account(id)!=null&&!id.equals(linkingAccountId)) ||
+          (store.records(id)!=null&&!store.records(id).isEmpty()) || store.enrollment(id)!=null)
+        throw new ResponseStatusException(HttpStatus.CONFLICT,"An existing GitHub learning profile needs administrator reconciliation before linking. Your previous records will not be overwritten.");
       target.put("githubId",id);
       target.put("githubLogin",login);
       try{store.saveAccount(target);}catch(DuplicateKeyException e){
