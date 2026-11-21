@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -106,7 +107,7 @@ public class Security {
           attributes.put("login",account.getString("username"));
           attributes.put("githubId",githubId);
           attributes.put("githubLogin",githubLogin);
-          var authorities=new HashSet<>(upstream.getAuthorities());
+          Set<GrantedAuthority> authorities=new HashSet<>(upstream.getAuthorities());
           authorities.add(new SimpleGrantedAuthority(
             githubId.equals(s.adminId)&&target==null?"ROLE_ADMIN":"ROLE_LEARNER"));
           return new DefaultOAuth2User(authorities,attributes,"id");
