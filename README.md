@@ -2,11 +2,23 @@
 
 A Spring Boot learning product with a 60-day curriculum, daily implementation tasks, short quizzes, private learner records and an admin-reviewed GitHub submission workflow.
 
+## Learning accounts are independent of GitHub
+
+- Learners can register with a **username, email, and 12+ character password**, sign in with a **verified Google account** (when configured), or continue using **GitHub OAuth**.
+- Google and password accounts immediately access lessons, study logs, checklists, quizzes, and progress exports. They do **not** receive upstream repository privileges automatically.
+- For coding submissions, learners select **Connections → Connect GitHub** to complete verified GitHub OAuth. **Typing a username is not proof of ownership.**
+- Once verified, learners request contribution access separately. The admin approves, creates or verifies their unique learners/<verified-github-login> branch, and manually reviews/merges PRs into that branch.
+- Existing GitHub learners retain their numeric GitHub-backed account IDs and existing learning history. Accounts are **never silently merged on matching email**.
+- Google login is optional: register a free Google Cloud OAuth client with authorized redirect URI https://agenticsl-learning-hub.onrender.com/login/oauth2/code/google, then set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Render. The button is hidden until configured.
+- Local passwords are stored as BCrypt hashes. The initial free build has no verified-email/password-reset flow or large-scale signup abuse controls. Complete those controls before unrestricted public rollout.
+- Linking must be initiated by an authenticated learner and completed by that learner's own GitHub OAuth approval. Existing assignments or another person's GitHub identity cannot be silently claimed.
+- The browser uses HttpOnly secure Spring Security session cookies; CSRF remains enforced for changes.
+
 ## Product
 
 - **Home `/`**: course overview, all eight modules and access to the interactive demo.
 - **Demo `/demo`**: all lessons, objectives, quizzes, study logging, assignment forms, skills and exports in an isolated, temporary session. Demo progress never becomes a real learner record.
-- **Workspace `/dashboard`**: GitHub-authenticated private learning dashboard, backed by MongoDB.
+- **Workspace `/dashboard`**: private dashboard for Google, password and GitHub learners, backed by MongoDB.
 - **Admin `/admin`**: participation requests, learner-branch provisioning or verification, submitted evidence, suggested scores and final approvals.
 - **Curriculum**: 60 specific lessons, 180 objectives and 120 server-graded questions. All progress starts empty.
 - **Evidence**: versioned explanations, code/output, PR URL and submitted commit. New submissions invalidate old review eligibility.
@@ -19,7 +31,7 @@ A Spring Boot learning product with a 60-day curriculum, daily implementation ta
 | Application | Java 21, Spring Boot 3.5, Spring MVC |
 | Interface | Thymeleaf, HTML, CSS and JavaScript |
 | Security | Spring Security, CSRF protection and server-side authorization |
-| Login | GitHub OAuth authorization-code login |
+| Login | GitHub OAuth, Google OIDC, or BCrypt-backed username/password |
 | Persistence | MongoDB Atlas; dedicated application database and least-privilege user |
 | Code submissions | GitHub forks and PRs to `learners/<username>` |
 | Evaluation | Deterministic quizzes, optional assignment CI and manual admin review |
@@ -30,7 +42,7 @@ The earlier Node/Vercel/Supabase prototype remains in the repository for history
 
 ## Learner and admin workflow
 
-1. Sign in with GitHub and request participation.
+1. Register with Google or username/password (or sign in using an existing GitHub account). Connect GitHub and request contribution access when ready.
 2. Admin approves after creating or verifying `learners/<github-username>` in the official repository. The optional repository token automates creation; without it, the admin creates the branch in GitHub and retries approval.
 3. Learners fork the public repository, clone their fork and make an assignment branch.
 4. Open a PR from that fork to the assigned learner branch, never to `main`.
@@ -66,6 +78,8 @@ Configure secrets only in Render's Environment settings, never in Git:
 | `PUBLIC_BASE_URL` | Exact HTTPS Render URL, with no trailing slash |
 | `GITHUB_CLIENT_ID` | GitHub OAuth App client ID |
 | `GITHUB_CLIENT_SECRET` | Matching OAuth App secret |
+| `GOOGLE_CLIENT_ID` | Optional Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Matching Google client secret |
 | `MONGODB_URI` | Connection URI with a dedicated app user's credentials |
 | `MONGODB_DATABASE` | `agenticsl` by default |
 | `ADMIN_GITHUB_ID` | Numeric ID of the admin; defaults to repository owner's current known ID |
