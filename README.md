@@ -1,6 +1,12 @@
+## Academic learning expansion (120 sessions)
+
+The curriculum now has **16 modules and 120 sequential sessions**. Days **1–60 remain unchanged in identity and saved learning records**. Days **61–120** cover planning and agent reasoning strategies, hybrid RAG, multimodal/computer-use systems, MCP and A2A, security and governance, evaluation/research, distributed operations and a research capstone. Foundation sessions offer at least four guided study hours; advanced sessions offer five hours. Session pages include a lecture timetable, domain-specific academic notes, architecture SVG diagram, application case study, technical relation, viva questions and practical assignment.
+
+The course is self-paced. Suggested hours are guidance, not an automated claim of completed study time. The existing 60 Python worked examples remain tested; new advanced tasks are guided projects that students must independently implement and evidence.
+
 # AgenticSL — Agentic AI Learning Hub
 
-A Spring Boot learning product with a 60-day curriculum, daily implementation tasks, short quizzes, private learner records and an admin-reviewed GitHub submission workflow.
+A Spring Boot learning product with a 120-session academic curriculum, daily implementation tasks, short quizzes, private learner records and an admin-reviewed GitHub submission workflow.
 
 ## Learning accounts are independent of GitHub
 
@@ -16,11 +22,11 @@ A Spring Boot learning product with a 60-day curriculum, daily implementation ta
 
 ## Product
 
-- **Home `/`**: course overview, all eight modules and access to the interactive demo.
+- **Home `/`**: course overview, all sixteen modules and access to the interactive demo.
 - **Demo `/demo`**: all lessons, objectives, quizzes, study logging, assignment forms, skills and exports in an isolated, temporary session. Demo progress never becomes a real learner record.
 - **Workspace `/dashboard`**: private dashboard for Google, password and GitHub learners, backed by MongoDB.
 - **Admin `/admin`**: participation requests, learner-branch provisioning or verification, submitted evidence, suggested scores and final approvals.
-- **Curriculum**: 60 specific lessons, 180 objectives and 120 server-graded questions. All progress starts empty.
+- **Curriculum**: 120 sessions in 16 modules (60 original foundation lessons plus 60 advanced seminars), 360 learning objectives and 240 server-graded questions. Original day IDs and stored progress are preserved. All progress starts empty.
 - **Evidence**: versioned explanations, code/output, PR URL and submitted commit. New submissions invalidate old review eligibility.
 - **Reports**: study time, quiz results, module completion, self-assessed skills, weekly reflections, private JSON and CSV exports.
 
@@ -96,7 +102,7 @@ Use an Atlas user with `readWrite` only on `agenticsl`, restricted to the intend
 
 Day 1 includes a WSGI API starter and four executable tests in `assignments/day-01/`. The starter intentionally fails until the learner implements it. The **Assignment evidence** workflow runs only on relevant PRs targeting learner branches, with read-only repository permissions, no persisted checkout credentials and a five-minute timeout. The application never executes submitted code.
 
-The remaining daily assignments have requirements and review rubrics; dedicated coding test suites are not yet supplied for all 60 days. Passing a PR check is supporting evidence, not automatic approval: the admin must inspect changes to tests/workflows and review the implementation before merging and approving it.
+The remaining daily assignments have requirements and review rubrics; dedicated coding test suites are not yet supplied for all 120 sessions. Passing a PR check is supporting evidence, not automatic approval: the admin must inspect changes to tests/workflows and review the implementation before merging and approving it.
 
 ## Verification and limits
 
@@ -112,6 +118,6 @@ Curriculum source lives in `src/curriculum.mjs`, `src/notes.mjs` and `src/practi
 
 ## Interactive coding lessons
 
-All 60 days include a syntax-highlighted, copyable Python example, checked expected output, a three-stage visual walkthrough and a failure exercise. Every example runs with Python 3.11+ and the standard library; model, framework and MCP protocol illustrations are explicitly local patterns, not live integrations. Run `python scripts/verify-tutorials.py` to execute every example and compare its actual output with the displayed result.
+The original 60 foundation days retain syntax-highlighted, copyable and CI-verified Python examples. Every session now includes academic lecture notes, an SVG architecture diagram, guided study plan, a case study, failure analysis, viva questions and rubric-based assessment. Days 61–120 add guided advanced implementation laboratories; they are not falsely described as pre-executed Python examples. Every example runs with Python 3.11+ and the standard library; model, framework and MCP protocol illustrations are explicitly local patterns, not live integrations. Run `python scripts/verify-tutorials.py` to execute every example and compare its actual output with the displayed result.
 
 Each daily workspace also has an editable HTML/CSS playground with a real rendered preview. A capability-free iframe sandbox and restrictive preview CSP disable scripts, network requests, forms and navigation privileges. Python examples run locally, never on the learning server. Preview edits are temporary and separate from assignment evidence. Reading text is fixed at 18px with responsive layouts for narrow screens. There are no manual text-size controls or saved text-size preferences.

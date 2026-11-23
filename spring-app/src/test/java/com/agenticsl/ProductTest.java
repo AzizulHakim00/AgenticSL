@@ -19,11 +19,23 @@ class ProductTest {
   @Autowired MockMvc mvc;
   @Autowired ObjectMapper mapper;
   @Autowired Course course;
-  @Test void fullCurriculumHas60LessonsAnd120Questions(){assertEquals(60,course.days.size());assertEquals(8,course.modules.size());for(var d:course.safeDays()){assertEquals(3,d.path("objectives").size());assertEquals(2,d.path("questions").size());for(var q:d.path("questions"))assertFalse(q.has("answer"));}}
+  @Test void academicCurriculumHas120Sessions16ModulesAnd240Questions(){assertEquals(120,course.days.size());assertEquals(16,course.modules.size());for(var d:course.safeDays()){assertEquals(3,d.path("objectives").size());assertEquals(2,d.path("questions").size());for(var q:d.path("questions"))assertFalse(q.has("answer"));}}
+  @Test void advancedDaysAreSequentialAndHaveLongerLectures(){
+    assertEquals("HTTP, REST & JSON",course.day(1).path("title").asText());
+    assertEquals("Advanced",course.day(61).path("academicTrack").asText());
+    assertEquals(16,course.day(120).path("module").asInt());
+    for(int n=1;n<=120;n++){
+      assertEquals(n,course.day(n).path("day").asInt());
+      assertTrue(course.day(n).path("minutes").asInt()>=240);
+      assertEquals(2,course.day(n).path("questions").size());
+    }
+  }
   @Test void homepageAndDemoRenderAsActualProduct()throws Exception{
     mvc.perform(get("/")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("Your next skill")));
     mvc.perform(get("/demo")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("Demo sandbox")));
     mvc.perform(get("/js/learning.js")).andExpect(status().isOk());
+    mvc.perform(get("/js/academic-lessons.js")).andExpect(status().isOk());
+    mvc.perform(get("/css/academic.css")).andExpect(status().isOk());
   }
   @Test void publicSignupAndPasswordLoginPagesAreAvailable()throws Exception{
     mvc.perform(get("/register")).andExpect(status().isOk())
@@ -53,7 +65,7 @@ class ProductTest {
   }
   @Test void malformedActionsCannotSetScoresOrIndexOtherTasks()throws Exception{
     mvc.perform(post("/api/demo/action").with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{\"type\":\"task\",\"day\":1,\"index\":30,\"checked\":true}")).andExpect(status().isBadRequest());
-    mvc.perform(post("/api/demo/action").with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{\"type\":\"quiz\",\"day\":61,\"answers\":[0,0]}")).andExpect(status().isBadRequest());
+    mvc.perform(post("/api/demo/action").with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{\"type\":\"quiz\",\"day\":121,\"answers\":[0,0]}")).andExpect(status().isBadRequest());
   }
   @Test void exportsContainOnlyCurrentDemoSession()throws Exception{
     mvc.perform(get("/api/demo/export")).andExpect(status().isOk()).andExpect(jsonPath("$.demo").value(true)).andExpect(jsonPath("$.records").isEmpty());
