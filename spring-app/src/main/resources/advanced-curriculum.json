@@ -2778,9 +2778,10 @@
       ],
       "academic": {
         "diagram": [
-          "Action classification",
-          "approval request",
-          "authorized execution"
+          "Risk tier",
+          "Explicit approval",
+          "Authorized action",
+          "Audit result"
         ],
         "idea": "Classify tools by read, low-risk write, high-risk write and irreversible action; require explicit approval for dangerous changes.",
         "lab": "Design an approval workflow for database writes",
@@ -4283,9 +4284,10 @@
       ],
       "academic": {
         "diagram": [
-          "Baseline architecture",
-          "data split",
-          "version manifest"
+          "Baseline design",
+          "Frozen data split",
+          "Version manifest",
+          "Reproduction check"
         ],
         "idea": "Freeze architecture, permissions and task splits before optimization; preserve versions and hashes. Design implication: Reproduce system structure and hold-out evaluation inputs. Verification requirement: Do not mutate held-out cases to improve apparent results.",
         "lab": "Create an architecture diagram and evaluation manifest",
