@@ -829,7 +829,7 @@
           "retrieval",
           "provenance"
         ],
-        "idea": "A rewrite can resolve terminology but must not invent claims or silently discard constraints.",
+        "idea": "A rewrite can resolve terminology but must not invent claims or silently discard constraints. Design implication: Improve retrieval queries without contaminating user intent. Verification requirement: Keep original question and log every rewrite.",
         "lab": "Test four rewrite strategies against a baseline retrieval set",
         "risk": "Keep original question and log every rewrite"
       }
@@ -1129,7 +1129,7 @@
           "provenance",
           "expiry"
         ],
-        "idea": "Memories require identity scope, timestamps, source, expiration, and correction procedures.",
+        "idea": "Memories require identity scope, timestamps, source, expiration, and correction procedures. Design implication: Prevent stale memories and cross-user contamination. Verification requirement: Do not leak another user's notes into a session.",
         "lab": "Design memory records with explicit scope and retention",
         "risk": "Do not leak another user's notes into a session"
       }
@@ -1429,7 +1429,7 @@
           "evidence log",
           "answer"
         ],
-        "idea": "Image regions may be ambiguous; distinguish OCR text, object presence and inferred intent.",
+        "idea": "Image regions may be ambiguous; distinguish OCR text, object presence and inferred intent. Design implication: Ground visual claims in regions and observable evidence. Verification requirement: Do not identify sensitive or unseen details from vague regions.",
         "lab": "Create a mock vision tool with explicit bounding-box evidence",
         "risk": "Do not identify sensitive or unseen details from vague regions"
       }
@@ -3385,7 +3385,7 @@
           "cost",
           "confidence intervals"
         ],
-        "idea": "Report task success, retry rates, latency percentiles and cost per success with repeated trials.",
+        "idea": "Report task success, retry rates, latency percentiles and cost per success with repeated trials. Design implication: Define denominators and repeated-run confidence. Verification requirement: Do not hide excluded or timed-out runs.",
         "lab": "Benchmark repeated deterministic agent tasks and report rates",
         "risk": "Do not hide excluded or timed-out runs"
       }
@@ -3460,7 +3460,7 @@
           "entailment labels",
           "report"
         ],
-        "idea": "Judge each cited claim against the source span, not simply whether a citation link exists.",
+        "idea": "Judge each cited claim against the source span, not simply whether a citation link exists. Design implication: Audit citation accuracy and attribution coverage. Verification requirement: A fabricated citation is not grounded evidence.",
         "lab": "Create a five-question evidence attribution rubric",
         "risk": "A fabricated citation is not grounded evidence"
       }
@@ -3610,7 +3610,7 @@
           "metrics",
           "tradeoff"
         ],
-        "idea": "Modify one component at a time, preserve a fixed test split and compare quality against added cost.",
+        "idea": "Modify one component at a time, preserve a fixed test split and compare quality against added cost. Design implication: Improve architecture using targeted ablations. Verification requirement: Avoid choosing a prompt solely from an anecdotal success.",
         "lab": "Test tool-description changes against a fixed task set",
         "risk": "Avoid choosing a prompt solely from an anecdotal success"
       }
@@ -4138,7 +4138,7 @@
           "monitor",
           "rollback"
         ],
-        "idea": "Promote only tested artifacts, verify migrations and monitor health after rollout.",
+        "idea": "Promote only tested artifacts, verify migrations and monitor health after rollout. Design implication: Apply secrets management, rollback and post-deploy checks. Verification requirement: Do not replace a healthy release without a rollback plan.",
         "lab": "Containerize a small agent API and run acceptance tests",
         "risk": "Do not replace a healthy release without a rollback plan"
       }
@@ -4213,7 +4213,7 @@
           "baselines",
           "test set"
         ],
-        "idea": "Define user, task distribution, baseline and measurable failure before inventing architecture.",
+        "idea": "Define user, task distribution, baseline and measurable failure before inventing architecture. Design implication: Turn a research gap into a falsifiable agent-system hypothesis. Verification requirement: Avoid claims of novelty without a closest-work audit.",
         "lab": "Write a research-ready agent system proposal",
         "risk": "Avoid claims of novelty without a closest-work audit"
       }
@@ -4287,7 +4287,7 @@
           "data split",
           "version manifest"
         ],
-        "idea": "Freeze architecture, permissions and task splits before optimization; preserve versions and hashes.",
+        "idea": "Freeze architecture, permissions and task splits before optimization; preserve versions and hashes. Design implication: Reproduce system structure and hold-out evaluation inputs. Verification requirement: Do not mutate held-out cases to improve apparent results.",
         "lab": "Create an architecture diagram and evaluation manifest",
         "risk": "Do not mutate held-out cases to improve apparent results"
       }
