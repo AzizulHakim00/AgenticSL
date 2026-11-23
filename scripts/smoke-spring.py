@@ -30,7 +30,7 @@ assert 'data-text-size' not in get('/js/learning-lab.js')
 assert 'reading-controls' not in get('/js/learning-lab.js')
 token = re.search(r'<meta name="_csrf" content="([^"]+)"', page).group(1)
 state = json.loads(get('/api/demo/state'))
-assert len(state['curriculum']) == 60 and state['state']['completed'] == 0
+assert len(state['curriculum']) == 120 and state['state']['completed'] == 0
 data = json.dumps({'type': 'task', 'day': 1, 'index': 0, 'checked': True,
                    'requestId': 'http-smoke-objective-0001'}).encode()
 request = urllib.request.Request(base + '/api/demo/action', data=data,
