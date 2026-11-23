@@ -22,8 +22,10 @@ jobs:
       - name: Verify published coding examples
         run: |
           node --check spring-app/src/main/resources/static/js/learning-lab.js
+          node --check spring-app/src/main/resources/static/js/academic-lessons.js
           node --check spring-app/src/main/resources/static/js/tutorials.js
           python scripts/verify-tutorials.py
+          python scripts/verify-academic.py
       - name: Exercise running product
         env:
           COOKIE_SECURE: 'false'
