@@ -417,8 +417,7 @@ window.AgenticFigureData=[
     "days": [
       26,
       27,
-      29,
-      31
+      29
     ],
     "title": "Single agent, parallel specialists and supervisor",
     "intro": "Compare how responsibility is distributed, not how intelligent the system appears.",
@@ -824,7 +823,7 @@ window.AgenticFigureData=[
           },
           {
             "label": "Local OR global search",
-            "detail": "Local: entities, graph context and text. Global: community reports with map-reduce."
+            "detail": "Local: entities, relationships and text. Global: community reports with map-reduce. Choose the suitable query strategy."
           },
           {
             "label": "Synthesize and verify",
@@ -1010,7 +1009,7 @@ window.AgenticFigureData=[
     "sources": [
       "https://modelcontextprotocol.io/docs/getting-started/intro",
       "https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/specification/2025-03-26/architecture/index.mdx",
-      "https://a2a-protocol.org/"
+      "https://a2a-protocol.org/latest/topics/key-concepts/"
     ]
   },
   {

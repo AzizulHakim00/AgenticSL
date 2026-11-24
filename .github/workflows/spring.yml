@@ -28,6 +28,9 @@ jobs:
           node scripts/build-visual-lectures.cjs --check
           node --check spring-app/src/main/resources/static/js/visual-lectures.js
           node scripts/verify-visual-lectures.cjs
+          node --check spring-app/src/main/resources/static/js/academic-figures-data.js
+          node --check spring-app/src/main/resources/static/js/academic-figures.js
+          node scripts/verify-academic-figures.cjs
           node --check spring-app/src/main/resources/static/js/tutorials.js
           python scripts/verify-tutorials.py
           python scripts/verify-academic.py
