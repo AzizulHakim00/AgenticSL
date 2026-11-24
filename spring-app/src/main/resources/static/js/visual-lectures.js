@@ -95,7 +95,7 @@
       '<div class="visual-heading"><div><span class="eyebrow">SYSTEM BEHAVIOR · INTERACTIVE DIAGRAM</span><h4>Follow a real engineering decision</h4></div>'+
       '<label class="visual-select-label">Simulation path <select data-visual-mode aria-label="Choose simulation scenario"><option value="success">Successful flow</option><option value="failure">Failure / rejection</option></select></label></div>'+
       '<figure class="visual-figure"><div class="visual-canvas" data-visual-canvas></div>'+
-      '<figcaption>Conceptual architecture with topic-specific routing. Highlighted nodes show the currently explained stage. No actual APIs are called.</figcaption></figure>'+
+      '<figcaption>Conceptual architecture with topic-specific routing. Highlighted nodes show the currently explained stage. No actual APIs are called.</figcaption></figure>'+'<details class="visual-transcript"><summary>Read the complete walkthrough as text</summary><ol>'+lesson.steps.map((step,i)=>'<li><strong>'+html(lesson.nodes[i])+'</strong>: '+html(step)+'</li>').join('')+'</ol><p><strong>Failure scenario:</strong> '+html(lesson.failure)+'</p></details>'+
       '<div class="visual-controls"><button type="button" class="btn small" data-visual-back>Previous</button>'+
       '<button type="button" class="btn primary small" data-visual-next>Next step →</button>'+
       '<button type="button" class="btn small" data-visual-play>▶ Play</button>'+
@@ -184,11 +184,11 @@
     strip.hidden=!start;
     if(current.focusTimer){window.clearInterval(current.focusTimer);current.focusTimer=null;}
     if(start){
-      current.remaining=25*60;clock();
+      current.remaining=25*60;current.focusEndsAt=Date.now()+25*60*1000;clock();
       const s=current;
       s.focusTimer=window.setInterval(()=>{
         if(!s.root.isConnected){window.clearInterval(s.focusTimer);return;}
-        s.remaining=Math.max(0,s.remaining-1);clock();
+        s.remaining=Math.max(0,Math.ceil((s.focusEndsAt-Date.now())/1000));clock();
         if(s.remaining===0){
           window.clearInterval(s.focusTimer);s.focusTimer=null;
           strip.textContent='Focus session finished. Log time manually if you studied.';
@@ -225,5 +225,5 @@
     if(event.target.matches('[data-visual-mode]')&&current&&current.root.contains(event.target))
       setScenario(event.target.value);
   });
-  window.AgenticVisual={render,mount,available:day=>lessons.has(Number(day)),count:lessons.size};
+  window.AgenticVisual={render,mount,available:day=>lessons.has(Number(day)),count:lessons.size,preview:(day,step=0,mode='success')=>{const d=lessons.get(Number(day));return d?figure(d,step,mode):'';}};
 })();
