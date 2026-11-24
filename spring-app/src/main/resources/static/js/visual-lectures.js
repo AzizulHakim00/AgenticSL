@@ -59,7 +59,7 @@
       return '<path class="visual-edge'+highlighted+'" d="'+d+'" marker-end="url(#'+id+')" />'+label;
     }).join('');
     const cards=layout.map(([x,y],i)=>{
-      const label=lesson.nodes[i].trim();
+      const label=mode==='failure' && frame===seq.length-1 && i===active && lesson.kind!=='branch' && lesson.kind!=='guard'? 'Recovery / stop' :lesson.nodes[i].trim();
       const words=label.split(/\s+/),lines=[''];
       for(const word of words){
         const last=lines.length-1;
@@ -135,7 +135,7 @@
     const canvas=s.root.querySelector('[data-visual-canvas]');
     if(canvas)canvas.innerHTML=figure(l,step,s.mode);
     s.root.querySelector('[data-visual-status]').textContent=failed?'REJECTED / RECOVERY REQUIRED':finished?'VERIFIED OUTPUT':'OBSERVATION '+(step+1);
-    s.root.querySelector('[data-visual-title]').textContent=l.nodes[at];
+    s.root.querySelector('[data-visual-title]').textContent=failed && l.kind!=='guard' && l.kind!=='branch'?'Failed verification · recovery required':l.nodes[at];
     s.root.querySelector('[data-visual-detail]').textContent=failed?l.failure:l.steps[at];
     const example={stage:l.nodes[at],simulation:s.mode,step:step+1,status:failed?'rejected':finished?'verified':'in_progress',example:l.packet};
     s.root.querySelector('[data-visual-packet]').textContent=JSON.stringify(example,null,2);
