@@ -96,6 +96,7 @@
       }catch(e){toast(e.message,true);}});
     }
     window.AgenticLessons.mount();
+    if(window.AgenticVisual)window.AgenticVisual.mount();
     bindForms();
   }
   function bindForms(){
