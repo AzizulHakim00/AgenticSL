@@ -25,6 +25,10 @@ page = get('/demo')
 assert '/css/learning-lab.css' in page and '/js/tutorials.js' in page
 assert 'window.AgenticTutorials=' in get('/js/tutorials.js')
 assert 'Your editable website preview' in get('/js/learning-lab.js')
+assert '/js/visual-lectures.js' in page and '/css/visual-lectures.css' in page
+assert 'window.AgenticVisualData=' in get('/js/visual-lectures-data.js')
+assert 'AgenticSL Visual Lecture 2.0' in get('/js/visual-lectures.js')
+assert '.visual-node-active' in get('/css/visual-lectures.css')
 assert 'font-size:18px' in get('/css/learning-lab.css')
 assert 'data-text-size' not in get('/js/learning-lab.js')
 assert 'reading-controls' not in get('/js/learning-lab.js')
