@@ -27,6 +27,8 @@ assert 'window.AgenticTutorials=' in get('/js/tutorials.js')
 assert 'Your editable website preview' in get('/js/learning-lab.js')
 assert '/js/visual-lectures.js' in page and '/css/visual-lectures.css' in page
 assert 'window.AgenticVisualData=' in get('/js/visual-lectures-data.js')
+assert '/js/visual-lectures-expanded.js' in page
+assert 'window.AgenticVisualData.push(...' in get('/js/visual-lectures-expanded.js')
 assert 'AgenticSL Visual Lecture 2.0' in get('/js/visual-lectures.js')
 assert '.visual-node-active' in get('/css/visual-lectures.css')
 assert 'font-size:18px' in get('/css/learning-lab.css')
