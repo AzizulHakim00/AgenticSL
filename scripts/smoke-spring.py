@@ -31,6 +31,9 @@ assert '/js/academic-figures.js' in page and '/css/academic-figures.css' in page
 assert 'window.AgenticFigureData=' in get('/js/academic-figures-data.js')
 assert 'window.AgenticFigures=' in get('/js/academic-figures.js')
 assert '.atlas-columns' in get('/css/academic-figures.css')
+assert '/css/academic-reader.css' in page
+assert '.reader-pane' in get('/css/academic-reader.css')
+assert 'readerSections' in get('/js/learning.js')
 assert '/js/visual-lectures-expanded.js' in page
 assert 'window.AgenticVisualData.push(...' in get('/js/visual-lectures-expanded.js')
 assert 'AgenticSL Visual Lecture 2.0' in get('/js/visual-lectures.js')

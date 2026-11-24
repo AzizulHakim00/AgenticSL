@@ -21,7 +21,7 @@ function lessonSchedule(minutes){
  values[values.length-1]+=minutes-values.reduce((a,b)=>a+b,0);
  return '<div class="academic-schedule" role="list">'+labels.map(([name],i)=>'<div role="listitem"><span>'+esc(name)+'</span><strong>'+values[i]+' min</strong></div>').join('')+'</div>';
 }
-function render(d){
+function render(d,part='all'){
  const c=chapters[d.module-1];if(!c)return '';
  const advanced=d.academicTrack==='Advanced';
  const desc=d.academic||{};
@@ -35,16 +35,17 @@ function render(d){
  ['Guided case study',c.caseStudy],
  ['Failure modes and responsible engineering',c.pitfalls]
  ];
- return '<section class="academic-banner"><div><span class="eyebrow">ACADEMIC LECTURE SERIES · '+esc(advanced?'ADVANCED':'FOUNDATION')+'</span><h2>'+esc(c.name)+'</h2><p>'+esc(c.kind)+' · Session '+d.day+' of 120 · '+Math.round(d.minutes/60*10)/10+' guided study hours</p></div><span class="academic-track">'+esc(advanced?'Advanced seminar':'Core lecture')+'</span></section>'
- +'<section class="panel academic-course-panel"><div class="section-head"><div><span class="eyebrow">LECTURE PLAN</span><h3>What you will learn today</h3></div><span class="pill">'+d.minutes+' minutes</span></div><p class="academic-focus"><strong>Learning target:</strong> '+esc(dayFocus)+'</p>'+lessonSchedule(d.minutes)+'</section>'
- +(window.AgenticVisual && window.AgenticVisual.available(d.day)?window.AgenticVisual.render(d):stepDiagram(words,'Day '+d.day+' · '+d.title))
- +(window.AgenticFigures?window.AgenticFigures.render(d.module,d.day):'')
- +'<section class="panel academic-course-panel"><div class="section-head"><div><span class="eyebrow">LECTURE NOTES</span><h3>Understand the engineering, not just the API</h3></div></div>'
+ const parts={plan:'<section class="academic-banner"><div><span class="eyebrow">ACADEMIC LECTURE SERIES · '+esc(advanced?'ADVANCED':'FOUNDATION')+'</span><h2>'+esc(c.name)+'</h2><p>'+esc(c.kind)+' · Session '+d.day+' of 120 · '+Math.round(d.minutes/60*10)/10+' guided study hours</p></div><span class="academic-track">'+esc(advanced?'Advanced seminar':'Core lecture')+'</span></section>'
+ +'<section class="panel academic-course-panel"><div class="section-head"><div><span class="eyebrow">LECTURE PLAN</span><h3>What you will learn today</h3></div><span class="pill">'+d.minutes+' minutes</span></div><p class="academic-focus"><strong>Learning target:</strong> '+esc(dayFocus)+'</p>'+lessonSchedule(d.minutes)+'</section>',
+simulation:(window.AgenticVisual && window.AgenticVisual.available(d.day)?window.AgenticVisual.render(d):stepDiagram(words,'Day '+d.day+' · '+d.title)),
+figures:(window.AgenticFigures?window.AgenticFigures.render(d.module,d.day):''),
+notes:'<section class="panel academic-course-panel"><div class="section-head"><div><span class="eyebrow">LECTURE NOTES</span><h3>Understand the engineering, not just the API</h3></div></div>'
  +sections.map(([heading,text],i)=>'<article class="academic-reading"><div class="academic-number">'+String(i+1).padStart(2,'0')+'</div><div><h4>'+esc(heading)+'</h4><p>'+esc(text)+'</p></div></article>').join('')
- +'<div class="academic-equation"><span>TECHNICAL RELATION</span><code>'+esc(c.formula)+'</code><small>Interpret the relation under its stated assumptions; do not treat it as a universal empirical law.</small></div></section>'
- +'<section class="panel academic-course-panel"><div class="section-head"><div><span class="eyebrow">SEMINAR & EXPERIMENT</span><h3>Apply the concept to today’s task</h3></div></div>'
+ +'<div class="academic-equation"><span>TECHNICAL RELATION</span><code>'+esc(c.formula)+'</code><small>Interpret the relation under its stated assumptions; do not treat it as a universal empirical law.</small></div></section>',
+review:'<section class="panel academic-course-panel"><div class="section-head"><div><span class="eyebrow">SEMINAR & EXPERIMENT</span><h3>Apply the concept to today’s task</h3></div></div>'
  +'<div class="academic-case"><h4>Problem statement</h4><p>'+esc(d.lesson)+'</p><h4>Implementation practice</h4><p>'+esc(dailyLab)+'</p><h4>Failure analysis</h4><p>'+esc(dailyRisk)+'</p></div>'
- +'<div class="academic-viva"><strong>Viva questions for independent understanding</strong><ol>'+c.viva.map(q=>'<li>'+esc(q)+'</li>').join('')+'<li>How would you test the main assumption behind '+esc(d.title)+'?</li></ol></div></section>';
+ +'<div class="academic-viva"><strong>Viva questions for independent understanding</strong><ol>'+c.viva.map(q=>'<li>'+esc(q)+'</li>').join('')+'<li>How would you test the main assumption behind '+esc(d.title)+'?</li></ol></div></section>'};
+ return part==='all'?Object.values(parts).join(''):(parts[part]||'');
 }
 function advancedLab(d){
  const info=d.academic||{};

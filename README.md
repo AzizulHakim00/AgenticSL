@@ -143,3 +143,7 @@ Each daily workspace also has an editable HTML/CSS playground with a real render
 ## Academic concept atlas
 
 Every module has an original, color-coded, reference-linked academic figure, available in the learning roadmap and lesson pages. Topic-relevant sessions open the plate by default; other sessions retain a compact expandable summary. The 16 plates complement (not replace) the 120 existing interactive lecture simulations, notes, labs, and formal assessments. GraphRAG distinguishes offline indexing and query-time local/global alternatives; MCP distinguishes the host/client/server boundary and A2A delegation. All diagrams use accessible HTML and inline vector icons, responsive CSS, and no external image service. They are conceptual teaching figures, not measured experiments. Run `node scripts/verify-academic-figures.cjs` for coverage and markup checks.
+
+## Organized academic reader
+
+Each lesson now has five study sections (Lecture, Figures, Simulation, Practice, Review). All original content remains available; only the selected section is visible. The roadmap uses expandable modules with completion counts and filter-aware expansion. The selected study section can be opened directly with a fourth hash segment, e.g. `/demo#day/72/lesson/figures`. Switching sections retains in-page practice work and pauses simulation playback when leaving it. Persisted progress and formal assessment rules are unchanged.

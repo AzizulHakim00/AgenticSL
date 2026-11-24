@@ -41,7 +41,7 @@
   function mount() { showPreview(); }
   function showcase(day) {
     const t = tutorial(day);
-    return '<section class="code-showcase"><div><span class="eyebrow">A WORKSPACE FOR BUILDERS</span><h2>Less guessing.<br>More working code.</h2><p>Read a worked example, trace the data flow, then experiment with a real browser preview.</p><button class="btn primary" data-go="day" data-day="' + day + '" data-tab="lesson">Open today’s coding lab →</button><div class="showcase-tags"><span>60 worked examples</span><span>Editable previews</span><span>Failure cases</span></div></div>' + codeWindow(t, true) + '</section>';
+    return '<section class="code-showcase"><div><span class="eyebrow">A WORKSPACE FOR BUILDERS</span><h2>Less guessing.<br>More working code.</h2><p>Read a worked example, trace the data flow, then experiment with a real browser preview.</p><button class="btn primary" data-go="day" data-day="' + day + '" data-tab="lesson" data-study-view="practice">Open today’s coding lab →</button><div class="showcase-tags"><span>60 worked examples</span><span>Editable previews</span><span>Failure cases</span></div></div>' + codeWindow(t, true) + '</section>';
   }
   document.addEventListener('click', async event => {
     const copy = event.target.closest('[data-copy-example]');
