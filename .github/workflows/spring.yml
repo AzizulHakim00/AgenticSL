@@ -24,6 +24,8 @@ jobs:
           node --check spring-app/src/main/resources/static/js/learning-lab.js
           node --check spring-app/src/main/resources/static/js/academic-lessons.js
           node --check spring-app/src/main/resources/static/js/visual-lectures-data.js
+          node --check spring-app/src/main/resources/static/js/visual-lectures-expanded.js
+          node scripts/build-visual-lectures.cjs --check
           node --check spring-app/src/main/resources/static/js/visual-lectures.js
           node scripts/verify-visual-lectures.cjs
           node --check spring-app/src/main/resources/static/js/tutorials.js
