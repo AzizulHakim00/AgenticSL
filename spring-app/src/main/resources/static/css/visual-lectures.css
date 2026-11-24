@@ -1,0 +1,87 @@
+/* AgenticSL Visual Lecture 2.0: classroom-first, restrained and fully responsive. */
+.visual-lecture{border-color:var(--line);position:relative;overflow:hidden;margin-bottom:22px}
+.visual-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding-bottom:19px;border-bottom:1px solid var(--line)}
+.visual-head h3{font-size:clamp(1.2rem,2vw,1.6rem);margin:7px 0 8px;letter-spacing:-.03em;line-height:1.25}
+.visual-head p{font-size:.94rem;line-height:1.7;color:var(--muted);max-width:76ch;margin:0}
+.visual-header-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex-shrink:0}
+.visual-header-actions button{white-space:nowrap}
+.visual-note-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0 23px}
+.visual-note-grid article{padding:21px;border:1px solid var(--line);background:var(--panel2);border-radius:12px;min-width:0}
+.visual-note-grid article>span{color:var(--accent);font-size:.68rem;letter-spacing:.12em;font-weight:700}
+.visual-note-grid h4{margin:10px 0 9px;font-size:1.08rem;letter-spacing:-.01em;line-height:1.35}
+.visual-note-grid p{font-size:.94rem;line-height:1.8;color:var(--text);margin:0;max-width:75ch}
+.visual-heading{display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.visual-heading h4{font-size:1.08rem;margin:5px 0 0;line-height:1.35}
+.visual-select-label{display:flex;align-items:center;gap:11px;color:var(--muted);font-size:.83rem}
+.visual-select-label select{color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;max-width:180px}
+.visual-figure{margin:0}
+.visual-canvas{overflow-x:auto;max-width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:12px;scrollbar-width:thin}
+.visual-svg{display:block;width:100%;min-width:700px;height:auto;max-height:380px}
+.visual-figure figcaption{color:var(--muted);font-size:.76rem;line-height:1.6;margin:9px 0 0}
+.visual-edge{fill:none;stroke:var(--muted);stroke-width:2;opacity:.55;transition:stroke .3s ease,opacity .3s ease,stroke-width .3s ease}
+.visual-edge-seen{stroke:var(--accent);stroke-width:3;opacity:1;stroke-dasharray:9 6;animation:visual-march 1.4s linear infinite}
+.visual-arrowhead{fill:var(--muted)}
+.visual-edge-tag{font:600 13px/1.2 system-ui,sans-serif;fill:var(--muted)}
+.visual-node rect{fill:var(--panel);stroke:var(--line);stroke-width:1.7;transition:fill .25s ease,stroke .25s ease}
+.visual-node-text{fill:var(--text);font:600 15px/1.3 'Segoe UI',system-ui,sans-serif}
+.visual-node-index{fill:var(--muted);font:600 10px ui-monospace,monospace}
+.visual-node-complete rect{stroke:var(--accent);stroke-opacity:.72}
+.visual-node-active rect{fill:var(--accent);stroke:var(--accent);stroke-width:2.2}
+.visual-node-active .visual-node-text,.visual-node-active .visual-node-index{fill:var(--accentText)}
+.visual-node-error rect{fill:var(--panel);stroke:var(--red);stroke-width:3}
+.visual-node-error .visual-node-index{fill:var(--red)}
+.visual-controls{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:15px 0 14px}
+.visual-controls .btn{min-height:38px}
+.visual-step-count{margin-left:auto;font-size:.81rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.visual-explanation{padding:18px 21px 20px;border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--panel2);border-radius:0 10px 10px 0}
+.visual-explanation .eyebrow{font-size:.7rem}
+.visual-explanation h4{font-size:1.06rem;margin:8px 0}
+.visual-explanation p{font-size:.94rem;line-height:1.8;color:var(--text);margin:0 0 13px}
+.visual-explanation pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.79rem;line-height:1.65;padding:12px 14px;border:1px solid var(--line);border-radius:8px;margin:0;background:var(--panel);color:var(--text);max-height:200px;overflow:auto}
+.visual-terms{display:flex;align-items:center;gap:16px;margin:20px 0 25px;flex-wrap:wrap}
+.visual-terms strong{font-size:.83rem;color:var(--muted)}
+.visual-terms>div{display:flex;gap:7px;flex-wrap:wrap}
+.visual-terms span{border:1px solid var(--line);background:var(--panel2);padding:6px 9px;border-radius:7px;font-size:.77rem}
+.visual-knowledge{padding:22px 22px 18px;border-radius:12px;border:1px solid var(--line)}
+.visual-knowledge h4{font-size:1.08rem;margin:10px 0 10px}
+.visual-knowledge p{font-size:.96rem;line-height:1.7;color:var(--text);margin:0 0 16px}
+.visual-options{display:grid;grid-template-columns:1fr;gap:8px}
+.visual-choice{display:block;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);line-height:1.5;font-size:.91rem}
+.visual-choice:not(:disabled):hover{border-color:var(--accent)}
+.visual-choice-correct{border-color:var(--accent)!important}
+.visual-choice-wrong{border-color:var(--red)!important}
+.visual-choice:disabled{opacity:1;cursor:default}
+.visual-answer{margin:14px 0;font-size:.9rem;line-height:1.7}
+.visual-knowledge small{font-size:.75rem;line-height:1.6;color:var(--muted)}
+.visual-focus-strip{margin:16px 0 0;border:1px solid var(--line);border-radius:8px;background:var(--panel2);padding:13px 16px;color:var(--text);font-size:.85rem}
+.visual-focus-strip[hidden]{display:none}
+@keyframes visual-march{from{stroke-dashoffset:0}to{stroke-dashoffset:-30}}
+body.lecture-focus .shell{grid-template-columns:1fr}
+body.lecture-focus .sidebar,body.lecture-focus .topbar,body.lecture-focus .workspace-grid>aside,body.lecture-focus .workspace-head,body.lecture-focus .tabs{display:none!important}
+body.lecture-focus .main{grid-column:1;width:100%}
+body.lecture-focus .content{width:100%;max-width:1140px;padding:20px;margin:auto}
+body.lecture-focus .workspace-grid{grid-template-columns:1fr;gap:0}
+body.lecture-focus #visual-lecture{scroll-margin-top:18px}
+@media(max-width:1000px){.visual-head{flex-direction:column}.visual-svg{min-width:850px}}
+@media(max-width:650px){.visual-lecture{padding:19px 15px}.visual-note-grid{grid-template-columns:1fr;gap:10px}.visual-note-grid article{padding:17px}.visual-head h3{font-size:1.22rem}.visual-select-label{width:100%;justify-content:space-between}.visual-figure figcaption{font-size:.73rem}.visual-explanation{padding:16px}.visual-options{gap:7px}.visual-knowledge{padding:17px}.visual-controls .btn{padding:9px 11px;font-size:.73rem}.visual-step-count{width:100%;text-align:right}.visual-canvas{padding:6px}.visual-svg{min-width:790px}}
+@media(prefers-reduced-motion:reduce){.visual-edge-seen{animation:none}.visual-edge,.visual-node rect{transition:none}}
+@media print{
+body.lecture-focus .shell,.shell{display:block!important}
+.sidebar,.topbar,.tabs,.visual-header-actions,.visual-controls,.visual-select-label,.visual-options,.visual-focus-strip,.workspace-grid>aside{display:none!important}
+.main,.content,.workspace-grid{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+.visual-lecture{border:0;padding:0;overflow:visible}
+.visual-canvas{overflow:visible;border:1px solid #aaa}
+.visual-svg{min-width:0!important;width:100%!important;max-height:260px}
+.visual-note-grid article,.visual-explanation{break-inside:avoid}
+.visual-note-grid{grid-template-columns:1fr 1fr}
+.visual-node-text,.visual-node-index{fill:#222!important}
+.visual-node rect{fill:#fff!important;stroke:#444!important}
+}
+
+/* Text-equivalent transcript: no motion or visual interpretation required. */
+.visual-transcript{border:1px solid var(--line);border-radius:8px;margin:12px 0 14px;padding:12px 15px;background:var(--panel)}
+.visual-transcript summary{cursor:pointer;font-size:.84rem;font-weight:600;list-style-position:inside}
+.visual-transcript ol{padding-left:25px;margin:14px 0}
+.visual-transcript li{margin:8px 0;line-height:1.75;font-size:.88rem;color:var(--text)}
+.visual-transcript p{font-size:.87rem;line-height:1.7;margin:10px 0 0;color:var(--text)}
+@media print{.visual-transcript{display:block!important}.visual-transcript ol{display:block}}

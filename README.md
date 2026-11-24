@@ -1,3 +1,18 @@
+## Visual Lecture 2.0 — interactive academic classroom
+
+The website includes **25 carefully authored, topic-specific visual lectures across all 16 modules**. A learner can read extended lesson-specific notes, inspect a worked case and a common misconception, and step through an offline simulation of the system in an accessible SVG diagram. Diagrams illustrate seven distinct topologies: linear pipelines, permission gates, feedback loops, retrieval pathways, conditional branches, dependency graphs and parallel workers.
+
+Each featured lecture provides **Previous, Next, Play/Pause, Reset, success/failure comparison**, a detailed trace panel, a text-only transcript, an ungraded self-check with immediate feedback, print-friendly notes and an optional **25-minute focus mode**. Playback starts only after the learner requests it and follows reduced-motion accessibility preferences. A study timer is **not** counted as logged learning time; progress and server-side grades remain in the existing systems.
+
+Content and implementation:
+- `spring-app/src/main/resources/static/js/visual-lectures-data.js`: 25 authored lecture datasets, checks, examples, scenario traces and misconceptions.
+- `spring-app/src/main/resources/static/js/visual-lectures.js`: reusable accessible offline simulation engine.
+- `spring-app/src/main/resources/static/css/visual-lectures.css`: responsive diagram layout, focus mode, reduced motion and print layout.
+- `scripts/verify-visual-lectures.cjs`: content, graph, integration, accessible markup and coverage regression tests. CI and live smoke tests check public assets.
+- The original 60 Python examples, 120 session IDs, existing progress, validated quizzes and GitHub PR review rules are preserved; no new authentication, API key, model inference or paid service is needed.
+
+The animations show deterministic educational examples, **not live agent execution**. Self-check questions here are explicitly ungraded, while formal assessment remains in the server-side quiz.
+
 ## Academic learning expansion (120 sessions)
 
 The curriculum now has **16 modules and 120 sequential sessions**. Days **1–60 remain unchanged in identity and saved learning records**. Days **61–120** cover planning and agent reasoning strategies, hybrid RAG, multimodal/computer-use systems, MCP and A2A, security and governance, evaluation/research, distributed operations and a research capstone. Foundation sessions offer at least four guided study hours; advanced sessions offer five hours. Session pages include a lecture timetable, domain-specific academic notes, architecture SVG diagram, application case study, technical relation, viva questions and practical assignment.

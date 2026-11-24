@@ -36,6 +36,9 @@ class ProductTest {
     mvc.perform(get("/js/learning.js")).andExpect(status().isOk());
     mvc.perform(get("/js/academic-lessons.js")).andExpect(status().isOk());
     mvc.perform(get("/css/academic.css")).andExpect(status().isOk());
+    mvc.perform(get("/js/visual-lectures.js")).andExpect(status().isOk());
+    mvc.perform(get("/js/visual-lectures-data.js")).andExpect(status().isOk());
+    mvc.perform(get("/css/visual-lectures.css")).andExpect(status().isOk());
   }
   @Test void publicSignupAndPasswordLoginPagesAreAvailable()throws Exception{
     mvc.perform(get("/register")).andExpect(status().isOk())
