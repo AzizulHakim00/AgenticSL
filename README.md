@@ -1,17 +1,20 @@
 ## Visual Lecture 2.0 — interactive academic classroom
 
-The website includes **25 carefully authored, topic-specific visual lectures across all 16 modules**. A learner can read extended lesson-specific notes, inspect a worked case and a common misconception, and step through an offline simulation of the system in an accessible SVG diagram. Diagrams illustrate seven distinct topologies: linear pipelines, permission gates, feedback loops, retrieval pathways, conditional branches, dependency graphs and parallel workers.
+The website includes **120 interactive visual lectures across all 16 modules**: the original 25 individually authored features are preserved, and 95 additional sessions now have topic-specific, editorially authored scenario, success and failure descriptions with diagrams and guided explanations. A learner can read extended lesson-specific notes, inspect a worked case and a common misconception, and step through an offline simulation of the system in an accessible SVG diagram. Diagrams illustrate seven distinct topologies: linear pipelines, permission gates, feedback loops, retrieval pathways, conditional branches, dependency graphs and parallel workers.
 
-Each featured lecture provides **Previous, Next, Play/Pause, Reset, success/failure comparison**, a detailed trace panel, a text-only transcript, an ungraded self-check with immediate feedback, print-friendly notes and an optional **25-minute focus mode**. Playback starts only after the learner requests it and follows reduced-motion accessibility preferences. A study timer is **not** counted as logged learning time; progress and server-side grades remain in the existing systems.
+Each lecture provides **Previous, Next, Play/Pause, Reset, success/failure comparison**, a detailed trace panel, a text-only transcript, an ungraded self-check with immediate feedback, print-friendly notes and an optional **25-minute focus mode**. Playback starts only after the learner requests it and follows reduced-motion accessibility preferences. A study timer is **not** counted as logged learning time; progress and server-side grades remain in the existing systems.
 
 Content and implementation:
-- `spring-app/src/main/resources/static/js/visual-lectures-data.js`: 25 authored lecture datasets, checks, examples, scenario traces and misconceptions.
+- `spring-app/src/main/resources/static/js/visual-lectures-data.js`: the original 25 curated lecture datasets.
+- `scripts/lecture-scenarios-*.tsv`: 95 additional day-specific scenarios with verified targets and negative cases.
+- `scripts/build-visual-lectures.cjs`: reproducible generator; run `node scripts/build-visual-lectures.cjs` after editing scenario or curriculum content, and `node scripts/build-visual-lectures.cjs --check` to verify its generated output.
+- `spring-app/src/main/resources/static/js/visual-lectures-expanded.js`: browser bundle generated from the 95 scenario records and the original course notes.
 - `spring-app/src/main/resources/static/js/visual-lectures.js`: reusable accessible offline simulation engine.
 - `spring-app/src/main/resources/static/css/visual-lectures.css`: responsive diagram layout, focus mode, reduced motion and print layout.
 - `scripts/verify-visual-lectures.cjs`: content, graph, integration, accessible markup and coverage regression tests. CI and live smoke tests check public assets.
 - The original 60 Python examples, 120 session IDs, existing progress, validated quizzes and GitHub PR review rules are preserved; no new authentication, API key, model inference or paid service is needed.
 
-The animations show deterministic educational examples, **not live agent execution**. Self-check questions here are explicitly ungraded, while formal assessment remains in the server-side quiz.
+Every one of the 120 sessions has an interactive visual walkthrough. The animations show deterministic educational examples, **not live agent execution**. Self-check questions here are explicitly ungraded, while formal assessment remains in the server-side quiz.
 
 ## Academic learning expansion (120 sessions)
 

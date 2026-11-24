@@ -17,12 +17,16 @@ const sandbox={
 };
 vm.createContext(sandbox);
 vm.runInContext(read(base+'js/visual-lectures-data.js'),sandbox,{timeout:1000});
-vm.runInContext(read(base+'js/visual-lectures.js'),sandbox,{timeout:1000});
+vm.runInContext(read(base+'js/visual-lectures-expanded.js'),sandbox,{timeout:3000});
+vm.runInContext(read(base+'js/visual-lectures.js'),sandbox,{timeout:3000});
 const config=sandbox.window.AgenticVisualData;
 const ui=sandbox.window.AgenticVisual;
-assert.equal(config.length,25,'Exactly 25 curated visual lectures');
-assert.equal(ui.count,25);
-assert.equal(new Set(config.map(d=>d.day)).size,25,'Unique lesson IDs');
+assert.equal(config.length,120,'All 120 sessions need a visual lecture');
+assert.equal(new Set(config.map(d=>d.day)).size,120,'There must be exactly one visual for each day');
+assert.equal(ui.count,120);
+for(let n=1;n<=120;n++)assert.ok(ui.available(n),'Missing visual for day '+n);
+assert.equal(config.filter(d=>d.day<=60).length,60,'Foundation coverage complete');
+assert.equal(config.filter(d=>d.day>60).length,60,'Advanced coverage complete');
 assert.equal(new Set(config.map(d=>days[d.day-1].module)).size,16,'All 16 modules are represented');
 assert.ok(new Set(config.map(d=>d.kind)).size>=7,'At least 7 diagram topologies');
 let checks=0;
@@ -50,11 +54,11 @@ for(const d of config){
  if(d.kind==='guard'||d.kind==='branch') assert.notEqual(regular,fail,'Failure path branches to different node');
  checks++;
 }
-assert.equal(ui.render(days[1]),'','Ordinary lessons remain unchanged');
+assert.match(ui.render(days[1]),/data-visual-day="2"/,'Previously static day is now interactive');
 assert.equal(ui.preview(999),'');
 const dashboard=read('spring-app/src/main/resources/templates/dashboard.html');
 const order=[
- '/js/visual-lectures-data.js','/js/visual-lectures.js','/js/academic-lessons.js','/js/learning.js'
+ '/js/visual-lectures-data.js','/js/visual-lectures-expanded.js','/js/visual-lectures.js','/js/academic-lessons.js','/js/learning.js'
 ].map(v=>dashboard.indexOf(v));
 assert.ok(order.every(v=>v>0)&&order.every((v,i)=>i===0||v>order[i-1]),'Load visual scripts in dependency order');
 assert.ok(dashboard.includes('/css/visual-lectures.css'));
@@ -63,4 +67,4 @@ assert.ok(read(base+'js/learning.js').includes('window.AgenticVisual.mount()'));
 const css=read(base+'css/visual-lectures.css');
 assert.ok(css.includes('prefers-reduced-motion')&&css.includes('@media print'));
 assert.ok(css.includes('lecture-focus')&&css.includes('visual-transcript'));
-console.log('25 curated lectures verified across 16 modules, 7 graph types and '+checks+' accessible simulation views.');
+console.log('120 visual lectures verified across 16 modules, 7 graph types and '+checks+' accessible simulation views.');
