@@ -77,3 +77,11 @@ body.lecture-focus .shell,.shell{display:block!important}
 .visual-node-text,.visual-node-index{fill:#222!important}
 .visual-node rect{fill:#fff!important;stroke:#444!important}
 }
+
+/* Text-equivalent transcript: no motion or visual interpretation required. */
+.visual-transcript{border:1px solid var(--line);border-radius:8px;margin:12px 0 14px;padding:12px 15px;background:var(--panel)}
+.visual-transcript summary{cursor:pointer;font-size:.84rem;font-weight:600;list-style-position:inside}
+.visual-transcript ol{padding-left:25px;margin:14px 0}
+.visual-transcript li{margin:8px 0;line-height:1.75;font-size:.88rem;color:var(--text)}
+.visual-transcript p{font-size:.87rem;line-height:1.7;margin:10px 0 0;color:var(--text)}
+@media print{.visual-transcript{display:block!important}.visual-transcript ol{display:block}}
