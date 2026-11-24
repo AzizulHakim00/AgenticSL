@@ -117,6 +117,11 @@
     if(current.focusTimer)window.clearInterval(current.focusTimer);
     current.playTimer=null;current.focusTimer=null;
   }
+  function suspend(){
+    if(!current)return;
+    if(document.body.classList.contains('lecture-focus'))focus();
+    killTimers();update();
+  }
   function mount(){
     killTimers();
     document.body.classList.remove('lecture-focus');
@@ -225,5 +230,5 @@
     if(event.target.matches('[data-visual-mode]')&&current&&current.root.contains(event.target))
       setScenario(event.target.value);
   });
-  window.AgenticVisual={render,mount,available:day=>lessons.has(Number(day)),count:lessons.size,preview:(day,step=0,mode='success')=>{const d=lessons.get(Number(day));return d?figure(d,Math.max(0,Math.min(route(d,mode==='failure').length-1,Number(step)||0)),mode):'';}};
+  window.AgenticVisual={render,mount,suspend,available:day=>lessons.has(Number(day)),count:lessons.size,preview:(day,step=0,mode='success')=>{const d=lessons.get(Number(day));return d?figure(d,Math.max(0,Math.min(route(d,mode==='failure').length-1,Number(step)||0)),mode):'';}};
 })();
