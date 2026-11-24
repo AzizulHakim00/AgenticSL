@@ -66,3 +66,16 @@ body.lecture-focus .reader-workspace>.workspace-support,body.lecture-focus .read
 @media(max-width:850px){.reader-workspace>.workspace-support{grid-template-columns:1fr;order:initial}.reader-workspace>.workspace-support .panel{display:block!important}.reader-module-summary{padding:15px 12px;gap:10px}.reader-module-body{padding:12px}.reader-pane .academic-schedule{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.reader-tab{min-height:44px;padding:8px 11px;font-size:13px}.reader-module-summary{grid-template-columns:34px minmax(0,1fr) 16px;gap:8px}.reader-module-index{width:32px;height:32px;font-size:12px}.reader-module-meta{grid-column:2;grid-row:2;text-align:left;font-size:11px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.reader-module-meta small{margin:0;font-size:11px}.reader-chevron{grid-column:3;grid-row:1}.reader-module-name strong{font-size:14px}.reader-module-name small{font-size:11px}.reader-pane .academic-schedule{grid-template-columns:1fr}.reader-pagination .btn{font-size:13px}.reader-pane .panel{padding:17px 14px}#reader-figures .atlas-paper{margin:0 7px 7px;padding:12px}.reader-pane .visual-svg{min-width:740px}}
 @media print{.reader-nav,.reader-pagination,.workspace-support,.reader-section-head{display:none!important}.reader-pane[hidden]{display:none!important}.reader-workspace{display:block}}
+
+/* Put the animated lesson first, with extended explanation available when wanted. */
+.reader-pane .visual-heading{margin-top:20px}
+.reader-supporting-notes{border:1px solid var(--line);border-radius:10px;margin:0 0 20px;padding:12px 15px}
+.reader-supporting-notes>summary{font-size:14px;font-weight:600;cursor:pointer;line-height:1.5;color:var(--text)}
+.reader-supporting-notes .visual-note-grid{margin:14px 0 0}
+.reader-supporting-notes .visual-note-grid article>span{letter-spacing:.06em;font-size:11px}
+.reader-pane .visual-controls{margin-top:14px}
+.reader-pane .visual-knowledge{padding:18px}
+.reader-pane .visual-explanation p{font-size:15px}
+@media(max-width:600px){.reader-pane .visual-note-grid article{padding:14px}}
+
+.reader-module-name .reader-track-label{margin:0 0 4px;font-size:10px;font-weight:650;letter-spacing:.07em}

@@ -88,10 +88,6 @@
       '<p>Walk through an evidence-based example and compare the successful and failure paths. This is a deterministic teaching simulation, not a live model call.</p></div>'+
       '<div class="visual-header-actions"><button type="button" class="btn small" data-visual-focus aria-pressed="false">Focus for 25 min</button>'+
       '<button type="button" class="btn small" data-visual-print>Print notes</button></div></header>'+
-      '<div class="visual-note-grid"><article><span>01 · PRINCIPLE</span><h4>Understand the mechanism</h4><p>'+html(lesson.principle)+'</p></article>'+
-      '<article><span>02 · WORKED CASE</span><h4>What happens in practice?</h4><p>'+html(lesson.caseStudy)+'</p></article>'+
-      '<article><span>03 · COMMON MISTAKE</span><h4>Check your assumptions</h4><p>'+html(lesson.misconception)+'</p></article>'+
-      '<article><span>04 · IMPLEMENTATION</span><h4>Try this in your lab</h4><p>'+html(lesson.lab)+'</p></article></div>'+
       '<div class="visual-heading"><div><span class="eyebrow">SYSTEM BEHAVIOR · INTERACTIVE DIAGRAM</span><h4>Follow a real engineering decision</h4></div>'+
       '<label class="visual-select-label">Simulation path <select data-visual-mode aria-label="Choose simulation scenario"><option value="success">Successful flow</option><option value="failure">Failure / rejection</option></select></label></div>'+
       '<figure class="visual-figure"><div class="visual-canvas" data-visual-canvas></div>'+
@@ -104,6 +100,12 @@
       '<div class="visual-explanation" aria-live="polite" aria-atomic="true"><span data-visual-status class="eyebrow">OBSERVATION</span>'+
       '<h4 data-visual-title></h4><p data-visual-detail></p><pre data-visual-packet></pre></div>'+
       '<div class="visual-terms"><strong>Key components</strong><div>'+terms+'</div></div>'+
+      '<details class="reader-supporting-notes"><summary>Concept notes, worked case and implementation guidance</summary>'+
+      '<div class="visual-note-grid"><article><span>01 · PRINCIPLE</span><h4>Understand the mechanism</h4><p>'+html(lesson.principle)+'</p></article>'+
+      '<article><span>02 · WORKED CASE</span><h4>What happens in practice?</h4><p>'+html(lesson.caseStudy)+'</p></article>'+
+      '<article><span>03 · COMMON MISTAKE</span><h4>Check your assumptions</h4><p>'+html(lesson.misconception)+'</p></article>'+
+      '<article><span>04 · IMPLEMENTATION</span><h4>Try this in your lab</h4><p>'+html(lesson.lab)+'</p></article></div>'+
+      '</details>'+
       '<div class="visual-knowledge"><span class="eyebrow">LECTURE CHECK · UNGRADED</span><h4>Can you explain the decision?</h4>'+
       '<p>'+html(lesson.check.question)+'</p><div class="visual-options" role="group" aria-label="Quick lecture question">'+choices+'</div>'+
       '<div data-visual-answer role="status" aria-live="polite" class="visual-answer"></div>'+
@@ -189,14 +191,14 @@
     strip.hidden=!start;
     if(current.focusTimer){window.clearInterval(current.focusTimer);current.focusTimer=null;}
     if(start){
-      current.remaining=25*60;current.focusEndsAt=Date.now()+25*60*1000;clock();
+      strip.innerHTML='Focus session: <strong data-visual-clock>25:00</strong> · Not automatically logged as study time';current.remaining=25*60;current.focusEndsAt=Date.now()+25*60*1000;clock();
       const s=current;
       s.focusTimer=window.setInterval(()=>{
         if(!s.root.isConnected){window.clearInterval(s.focusTimer);return;}
         s.remaining=Math.max(0,Math.ceil((s.focusEndsAt-Date.now())/1000));clock();
         if(s.remaining===0){
           window.clearInterval(s.focusTimer);s.focusTimer=null;
-          strip.textContent='Focus session finished. Log time manually if you studied.';
+          strip.innerHTML='Focus session finished. <strong data-visual-clock>00:00</strong> · Log time manually if you studied.';
         }
       },1000);
       current.root.scrollIntoView({behavior:prefersReducedMotion()?'auto':'smooth',block:'start'});
