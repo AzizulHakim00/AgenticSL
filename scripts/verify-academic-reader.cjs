@@ -48,4 +48,7 @@ assert.ok(read('static/js/academic-figures.js').includes('open=!isRoadmap'));
 assert.ok(read('static/css/academic-reader.css').includes('.reader-pane{display:block;'));
 assert.ok(read('templates/dashboard.html').includes('/css/academic-reader.css'));
 assert.ok(read('static/js/visual-lectures.js').includes('reader-supporting-notes'));
+const readerCss=read('static/css/academic-reader.css');
+let depth=0;for(const c of readerCss){if(c==='{')depth++;if(c==='}')depth--;assert.ok(depth>=0);}
+assert.equal(depth,0,'CSS blocks must balance');
 console.log('120 complete continuous lecture pages verified, with optional jump navigation and preserved assessment state.');
