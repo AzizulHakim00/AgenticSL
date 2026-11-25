@@ -48,7 +48,7 @@ function lane(f,c,i){
 }
 function render(module,day){
  const f=figures.get(Number(module));if(!f)return '';
- const isRoadmap=day===undefined,open=!isRoadmap&&f.days.includes(Number(day));
+ const isRoadmap=day===undefined,open=!isRoadmap;
  const n=String(f.module).padStart(2,'0');
  const source=f.sources.filter(url=>/^https:\/\//.test(url)).map((url,i)=>'<a href="'+e(url)+'" target="_blank" rel="noopener noreferrer">Reference '+(i+1)+' · '+e(new URL(url).hostname.replace(/^www\./,''))+'</a>').join('');
  return '<details class="atlas-figure '+(isRoadmap?'atlas-roadmap':'atlas-lesson')+'" data-academic-figure="'+f.module+'"'+(open?' open':'')+'><summary><span class="atlas-summary-icon">'+icon('graph')+'</span><span><small>MODULE '+n+' · ACADEMIC FIGURE</small><strong>'+e(f.title)+'</strong></span><span class="atlas-disclosure" aria-hidden="true">⌄</span></summary><figure class="atlas-paper"><header class="atlas-title"><span>AGENTICSL · CONCEPT ATLAS / '+n+'</span><h3>'+e(f.title)+'</h3><p>'+e(f.intro)+'</p></header>'+(f.module===12?'<div class="atlas-crosslink">MCP host contains client · client ↔ server · separate A2A agent endpoint</div>':'')+(f.module===4?'<div class="atlas-crosslink">Offline index → online retrieval → grounded generation</div>':'')+'<div class="atlas-columns">'+f.columns.map((c,i)=>lane(f,c,i)).join('')+'</div><figcaption><strong>Figure '+n+'. '+e(f.title)+'.</strong> '+e(f.caption)+' <span>Original AgenticSL teaching illustration; simplified conceptual architecture.</span></figcaption><div class="atlas-sources"><strong>Further reading</strong>'+source+'</div></figure></details>';
